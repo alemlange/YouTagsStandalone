@@ -21285,6 +21285,179 @@ if (false) {} else {
 
 /***/ }),
 
+/***/ "./public/javascripts/components/YouTagsTool.js":
+/*!******************************************************!*\
+  !*** ./public/javascripts/components/YouTagsTool.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _ControlPanel = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module 'ControlPanel'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+
+var _ControlPanel2 = _interopRequireDefault(_ControlPanel);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var YouTagsTool = function (_React$Component) {
+    _inherits(YouTagsTool, _React$Component);
+
+    function YouTagsTool(props) {
+        _classCallCheck(this, YouTagsTool);
+
+        return _possibleConstructorReturn(this, (YouTagsTool.__proto__ || Object.getPrototypeOf(YouTagsTool)).call(this, props));
+    }
+
+    _createClass(YouTagsTool, [{
+        key: "render",
+        value: function render() {
+            return _react2.default.createElement(
+                "div",
+                { className: "te-explorer" },
+                _react2.default.createElement(_ControlPanel2.default, null),
+                _react2.default.createElement(
+                    "div",
+                    { id: "check-list-row", className: "steps-container" },
+                    _react2.default.createElement(
+                        "div",
+                        { className: "list-element" },
+                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
+                        _react2.default.createElement(
+                            "span",
+                            { className: "step-title" },
+                            "1. \u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u044B\u0432\u0430\u0435\u043C \u0432\u0438\u0434\u0435\u043E \u0444\u0430\u0439\u043B"
+                        ),
+                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "list-element" },
+                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
+                        _react2.default.createElement(
+                            "span",
+                            { className: "step-title" },
+                            "2. \u041F\u043E\u0434\u0431\u0438\u0440\u0430\u0435\u043C \u043F\u043E\u0438\u0441\u043A\u043E\u0432\u044B\u0435 \u0442\u0435\u0433\u0438"
+                        ),
+                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "list-element" },
+                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
+                        _react2.default.createElement(
+                            "span",
+                            { className: "step-title" },
+                            "3. \u041F\u043E\u0434\u0431\u0438\u0440\u0430\u0435\u043C \u0442\u0435\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u0435 \u0442\u0435\u0433\u0438"
+                        ),
+                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "list-element" },
+                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
+                        _react2.default.createElement(
+                            "span",
+                            { className: "step-title" },
+                            "4. \u041F\u043E\u0434\u0431\u0438\u0440\u0430\u0435\u043C \u0431\u0440\u0435\u043D\u0434\u0438\u0440\u0443\u044E\u0449\u0438\u0435 \u0442\u0435\u0433\u0438"
+                        ),
+                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "list-element" },
+                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
+                        _react2.default.createElement(
+                            "span",
+                            { className: "step-title" },
+                            "5. \u041F\u0440\u0438\u0434\u0443\u043C\u044B\u0432\u0430\u0435\u043C \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0434\u043B\u044F \u0432\u0438\u0434\u0435\u043E"
+                        ),
+                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "list-element" },
+                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
+                        _react2.default.createElement(
+                            "span",
+                            { className: "step-title" },
+                            "6. \u0421\u043E\u0441\u0442\u0430\u0432\u043B\u044F\u0435\u043C \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u043A \u0432\u0438\u0434\u0435\u043E"
+                        ),
+                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "list-element" },
+                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
+                        _react2.default.createElement(
+                            "span",
+                            { className: "step-title" },
+                            "7. \u0421\u043E\u0437\u0434\u0430\u0435\u043C \u043F\u0440\u0435\u0432\u044C\u044E"
+                        ),
+                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "list-element" },
+                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
+                        _react2.default.createElement(
+                            "span",
+                            { className: "step-title" },
+                            "8. \u041D\u0430\u0441\u0442\u0440\u0430\u0438\u0432\u0430\u0435\u043C \u0437\u0430\u0441\u0442\u0430\u0432\u043A\u0438 \u0438 \u043F\u043E\u0434\u0441\u043A\u0430\u0437\u043A\u0438"
+                        ),
+                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "list-element" },
+                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
+                        _react2.default.createElement(
+                            "span",
+                            { className: "step-title" },
+                            "9. \u0421\u043E\u0437\u0434\u0430\u0434\u0438\u043C \u043F\u043B\u0435\u0439\u043B\u0438\u0441\u0442\u044B"
+                        ),
+                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "list-element" },
+                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
+                        _react2.default.createElement(
+                            "span",
+                            { className: "step-title" },
+                            "10. \u0418\u0449\u0435\u043C \u0442\u0440\u0430\u0444\u0438\u043A \u043D\u0430 \u0432\u0438\u0434\u0435\u043E."
+                        ),
+                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
+                    )
+                )
+            );
+        }
+    }]);
+
+    return YouTagsTool;
+}(_react2.default.Component);
+
+exports.default = YouTagsTool;
+
+/***/ }),
+
 /***/ "./public/javascripts/cookieManager.js":
 /*!*********************************************!*\
   !*** ./public/javascripts/cookieManager.js ***!
@@ -21300,6 +21473,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = CookieManager;
 function CookieManager() {
+
     this.getCookie = function (name) {
         var matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
         return matches ? decodeURIComponent(matches[1]) : undefined;
@@ -21366,8 +21540,11 @@ var _cookieManager2 = _interopRequireDefault(_cookieManager);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function overlayOk() {
-    var mngr = new _cookieManager2.default();
-    mngr.setCookie("GreetingOk", true, { expires: 2147483647, path: "/" });
+    var manager = new _cookieManager2.default();
+    manager.setCookie("GreetingOk", true, { expires: 2147483647, path: "/" });
+
+    var overlay = document.getElementById("overlay");
+    overlay.style.display = "none";
 }
 
 /***/ }),
@@ -21390,10 +21567,14 @@ var _reactDom = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/i
 
 var _overlay = __webpack_require__(/*! ./javascripts/overlay.js */ "./public/javascripts/overlay.js");
 
+var _YouTagsTool = __webpack_require__(/*! ./javascripts/components/YouTagsTool */ "./public/javascripts/components/YouTagsTool.js");
+
+var _YouTagsTool2 = _interopRequireDefault(_YouTagsTool);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 Window.overlayOk = _overlay.overlayOk;
-(0, _reactDom.render)(_react2.default.createElement("div", null), document.getElementById("root"));
+(0, _reactDom.render)(_react2.default.createElement(_YouTagsTool2.default, null), document.getElementById("root"));
 
 /***/ })
 
