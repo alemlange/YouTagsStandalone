@@ -86,6 +86,188 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./node_modules/dot-prop-immutable/index.js":
+/*!**************************************************!*\
+  !*** ./node_modules/dot-prop-immutable/index.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Set a value by a dot path.
+ * @param obj The object to evaluate.
+ * @param prop The path to be set.
+ * @param val The value to set.
+ */
+function set(obj, prop, value) {
+	prop = typeof prop === 'number' ? propToArray(prop.toString()) : typeof prop === 'string' ? propToArray(prop) : prop;
+
+	var setPropImmutableRec = function(obj, prop, value, i) {
+		var clone, head = prop[i];
+
+		if (prop.length > i) {
+			if (Array.isArray(obj)) {
+				head = getArrayIndex(head, obj);
+				clone = obj.slice();
+			} else {
+				clone = Object.assign({}, obj);
+			}
+			clone[head] = setPropImmutableRec(obj[head] !== undefined ? obj[head] : {}, prop, value, i + 1);
+			return clone;
+		}
+
+		return typeof value === 'function' ? value(obj) : value;
+	};
+
+	return setPropImmutableRec(obj, prop, value, 0);
+}
+
+/**
+ * Get a value by a dot path.
+ * @param obj The object to evaluate.
+ * @param prop The path to value that should be returned.
+ */
+function get(obj, prop, value) {
+	prop = typeof prop === 'number' ? propToArray(prop.toString()) : typeof prop === 'string' ? propToArray(prop) : prop;
+
+	for (var i = 0; i < prop.length; i++) {
+		if (typeof obj !== 'object') {
+			return value;
+		}
+		var head = prop[i];
+		if (Array.isArray(obj) && head === '$end') {
+			head = obj.length - 1;
+		}
+		obj = obj[head];
+	}
+
+	return obj;
+}
+
+/**
+ * Delete a property by a dot path.
+ * If target container is an object, the property is deleted.
+ * If target container is an array, the index is deleted.
+ * If target container is undefined, nothing is deleted.
+ * @param obj The object to evaluate.
+ * @param prop The path to the property or index that should be deleted.
+ */
+function _delete(obj, prop) {
+	prop = typeof prop === 'number' ? propToArray(prop.toString()) : typeof prop === 'string' ? propToArray(prop) : prop;
+
+	var deletePropImmutableRec = function(obj, prop, i) {
+		var clone, head = prop[i];
+
+		if (typeof obj !== 'object' ||
+			!Array.isArray(obj) && obj[head] === undefined) {
+
+			return obj;
+		}
+
+		if (prop.length - 1 > i) {
+			if (Array.isArray(obj)) {
+				head = getArrayIndex(head, obj);
+				clone = obj.slice();
+			} else {
+				clone = Object.assign({}, obj);
+			}
+
+			clone[head] = deletePropImmutableRec(obj[head], prop, i + 1);
+			return clone;
+		}
+
+		if (Array.isArray(obj)) {
+			head = getArrayIndex(head, obj);
+			clone = [].concat(obj.slice(0, head), obj.slice(head + 1));
+		} else {
+			clone = Object.assign({}, obj);
+			delete clone[head];
+		}
+
+		return clone;
+	};
+
+	return deletePropImmutableRec(obj, prop, 0);
+}
+
+/**
+ * Toggles a value.  The target value is evaluated using Boolean(currentValue).  The result will always be a JSON boolean.
+ * Be careful with strings as target value, as "true" and "false" will toggle to false, but "0" will toggle to true.
+ * Here is what Javascript considers false:  0, -0, null, false, NaN, undefined, and the empty string ("")
+ * @param obj The object to evaluate.
+ * @param prop The path to the value.
+ */
+function toggle(obj, prop) {
+	var curVal = get(obj, prop);
+	return set(obj, prop, !Boolean(curVal));
+}
+
+/**
+ * Merges a value.  The target value must be an object, array, null, or undefined.
+ * If target is an object, Object.assign({}, target, param) is used.
+ * If target an array, target.concat(param) is used.
+ * If target is null or undefined, the value is simply set.
+ * @param obj The object to evaluate.
+ * @param prop The path to the value.
+ * @param val The value to merge into the target value.
+ */
+function merge(obj, prop, val) {
+	var curVal = get(obj, prop);
+	if (typeof curVal === 'object') {
+		if (Array.isArray(curVal)){
+			return set(obj, prop, curVal.concat(val));
+		} else if (curVal === null){
+			return set(obj, prop, val);
+		}
+		else {
+			var merged = Object.assign({}, curVal, val);
+			return set(obj, prop, merged);
+		}
+	} else if (typeof curVal === 'undefined'){
+		return set(obj, prop, val);
+	}
+	else {
+		return obj;
+	}
+}
+
+function getArrayIndex(head, obj) {
+	if (head === '$end') {
+		head = Math.max(obj.length - 1, 0);
+	}
+	if (!/^\+?\d+$/.test(head)) {
+		throw new Error('Array index \'' + head + '\' has to be an integer');
+	}
+	return parseInt(head);
+}
+
+function propToArray(prop) {
+	return prop.split('.').reduce(function (ret, el, index, list) {
+		var last = index > 0 && list[index - 1];
+		if (last && /(?:^|[^\\])\\$/.test(last)) {
+			ret.pop();
+			ret.push(last.slice(0, -1) + '.' + el);
+		} else {
+			ret.push(el);
+		}
+		return ret;
+	}, []);
+}
+
+module.exports = {
+	set: set,
+	get: get,
+	delete: _delete,
+	toggle: toggle,
+	merge: merge
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js":
 /*!**********************************************************************************!*\
   !*** ./node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js ***!
@@ -24293,6 +24475,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ToCheckListAction = ToCheckListAction;
 exports.ToTagFinderAction = ToTagFinderAction;
+exports.RestartSteps = RestartSteps;
+exports.ExecuteStep = ExecuteStep;
+exports.ToggleStep = ToggleStep;
 function ToCheckListAction() {
     return {
         type: "ToCheckList"
@@ -24302,6 +24487,26 @@ function ToCheckListAction() {
 function ToTagFinderAction() {
     return {
         type: "ToTagFinder"
+    };
+}
+
+function RestartSteps() {
+    return {
+        type: "RestartSteps"
+    };
+}
+
+function ExecuteStep(stepNum, executed) {
+    return {
+        type: "ExecuteStep",
+        payload: { stepNum: stepNum, executed: executed }
+    };
+}
+
+function ToggleStep(stepNum, opened) {
+    return {
+        type: "ToggleStep",
+        payload: { stepNum: stepNum, opened: opened }
     };
 }
 
@@ -24345,20 +24550,41 @@ var ControlPanel = function (_React$Component) {
     }
 
     _createClass(ControlPanel, [{
+        key: "checkListClick",
+        value: function checkListClick(e) {
+            e.preventDefault();
+            this.props.onCheckListClick();
+        }
+    }, {
+        key: "tagExplorerClick",
+        value: function tagExplorerClick(e) {
+            e.preventDefault();
+            this.props.onTagExplorerClick();
+        }
+    }, {
+        key: "menuBtnClick",
+        value: function menuBtnClick(e) {
+            e.preventDefault();
+            this.props.onRestartStepsClick();
+        }
+    }, {
         key: "render",
         value: function render() {
+
+            var checkTabClass = this.props.activeCheckListTab ? "check-control section-link active" : "check-control section-link";
+            var tagTabClass = this.props.activeCheckListTab ? "tag-control section-link" : "tag-control section-link active";
             return _react2.default.createElement(
                 "div",
                 { className: "control-panel" },
-                _react2.default.createElement("a", { href: "#", className: "btn menu-btn" }),
+                _react2.default.createElement("a", { href: "#", className: "btn menu-btn", onClick: this.menuBtnClick.bind(this) }),
                 _react2.default.createElement(
                     "a",
-                    { href: "#", className: "check-control section-link active" },
+                    { href: "#", className: checkTabClass, onClick: this.checkListClick.bind(this) },
                     "\u0427\u0435\u043A \u041B\u0438\u0441\u0442"
                 ),
                 _react2.default.createElement(
                     "a",
-                    { href: "#", className: "tag-control section-link" },
+                    { href: "#", className: tagTabClass, onClick: this.tagExplorerClick.bind(this) },
                     "\u041F\u043E\u0438\u0441\u043A \u0442\u0435\u0433\u043E\u0432"
                 )
             );
@@ -24369,6 +24595,328 @@ var ControlPanel = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = ControlPanel;
+
+/***/ }),
+
+/***/ "./public/javascripts/components/Step.js":
+/*!***********************************************!*\
+  !*** ./public/javascripts/components/Step.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Step = function (_React$Component) {
+    _inherits(Step, _React$Component);
+
+    function Step(props) {
+        _classCallCheck(this, Step);
+
+        return _possibleConstructorReturn(this, (Step.__proto__ || Object.getPrototypeOf(Step)).call(this, props));
+    }
+
+    _createClass(Step, [{
+        key: "checkBoxClick",
+        value: function checkBoxClick() {
+            var stepNum = this.props.stepNum;
+            var stepExecuted = !this.props.step.executed;
+            this.props.stepExecution(stepNum, stepExecuted);
+        }
+    }, {
+        key: "stepToggleClick",
+        value: function stepToggleClick() {
+            var stepNum = this.props.stepNum;
+            var stepOpened = !this.props.step.opened;
+            this.props.stepToggling(stepNum, stepOpened);
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            var _props$step = this.props.step,
+                opened = _props$step.opened,
+                executed = _props$step.executed,
+                name = _props$step.name,
+                guidance = _props$step.guidance,
+                advices = _props$step.advices;
+
+
+            var visibleStyle = { display: "block" };
+            var invisibleStyle = { display: "none" };
+            var stepStyle = opened ? visibleStyle : invisibleStyle;
+
+            var allAdvices = advices.map(function (advice, i) {
+                return _react2.default.createElement(
+                    "li",
+                    { key: i },
+                    advice
+                );
+            });
+
+            return _react2.default.createElement(
+                "div",
+                { className: "list-element" },
+                _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox", checked: executed, onChange: this.checkBoxClick.bind(this) }),
+                _react2.default.createElement(
+                    "span",
+                    { className: "step-title", onClick: this.stepToggleClick.bind(this) },
+                    name
+                ),
+                _react2.default.createElement("img", { className: "caret-down", onClick: this.stepToggleClick.bind(this), src: opened ? "/images/caret-up.png" : "/images/caret-down.png" }),
+                _react2.default.createElement(
+                    "div",
+                    { className: "step", "data-stepnum": "5", style: stepStyle },
+                    _react2.default.createElement(
+                        "p",
+                        { className: "step-guidance" },
+                        guidance
+                    ),
+                    _react2.default.createElement(
+                        "ul",
+                        { className: "bullet-list" },
+                        allAdvices
+                    )
+                )
+            );
+        }
+    }]);
+
+    return Step;
+}(_react2.default.Component);
+
+exports.default = Step;
+
+/***/ }),
+
+/***/ "./public/javascripts/components/TagFinder.js":
+/*!****************************************************!*\
+  !*** ./public/javascripts/components/TagFinder.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var TagFinder = function (_React$Component) {
+    _inherits(TagFinder, _React$Component);
+
+    function TagFinder(props) {
+        _classCallCheck(this, TagFinder);
+
+        return _possibleConstructorReturn(this, (TagFinder.__proto__ || Object.getPrototypeOf(TagFinder)).call(this, props));
+    }
+
+    _createClass(TagFinder, [{
+        key: "checkBoxClick",
+        value: function checkBoxClick() {
+            var stepNum = this.props.stepNum;
+            var stepExecuted = !this.props.step.executed;
+            this.props.stepExecution(stepNum, stepExecuted);
+        }
+    }, {
+        key: "render",
+        value: function render() {
+
+            var visibleStyle = { display: "block" };
+            var invisibleStyle = { display: "none" };
+
+            return _react2.default.createElement(
+                "div",
+                null,
+                _react2.default.createElement(
+                    "div",
+                    { className: "search-section" },
+                    _react2.default.createElement(
+                        "div",
+                        { className: "search-control" },
+                        _react2.default.createElement("input", { className: "te-tag-input", placeholder: "\u041F\u043E\u0438\u0441\u043A \u0442\u0435\u0433\u043E\u0432" }),
+                        _react2.default.createElement("a", { className: "te-find btn btn-sm btn-outline-secondary" })
+                    )
+                ),
+                _react2.default.createElement(
+                    "div",
+                    { className: "search-img-section" },
+                    _react2.default.createElement("img", { className: "search-img-big", src: "/images/search.png" }),
+                    _react2.default.createElement("br", null),
+                    _react2.default.createElement(
+                        "h3",
+                        null,
+                        "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0442\u0435\u043A\u0441\u0442 \u0438 \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u043F\u043E\u0438\u0441\u043A"
+                    )
+                ),
+                _react2.default.createElement(
+                    "div",
+                    { className: "results", style: invisibleStyle },
+                    _react2.default.createElement(
+                        "div",
+                        { className: "row load-gif-container box" },
+                        _react2.default.createElement(
+                            "div",
+                            { className: "col-md-12 meter" },
+                            _react2.default.createElement("img", { className: "load-img", src: "/images/load.gif" }),
+                            _react2.default.createElement(
+                                "h3",
+                                null,
+                                "\u0412\u044B\u0447\u0438\u0441\u043B\u044F\u0435\u043C \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043A\u0443 \u0442\u0435\u0433\u0430..."
+                            )
+                        )
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "meters-container box", style: invisibleStyle },
+                        _react2.default.createElement(
+                            "div",
+                            { className: "row speedometer-section" },
+                            _react2.default.createElement(
+                                "div",
+                                { className: "col-md-6 meter search-value" },
+                                _react2.default.createElement(
+                                    "h3",
+                                    null,
+                                    "\u041E\u0431\u044A\u0435\u043C \u043F\u043E\u0438\u0441\u043A\u0430"
+                                ),
+                                _react2.default.createElement("img", { className: "sv-img-meter", src: "/images/sm_md.png" })
+                            ),
+                            _react2.default.createElement(
+                                "div",
+                                { className: "col-md-6 meter search-count" },
+                                _react2.default.createElement(
+                                    "h3",
+                                    null,
+                                    "\u041A\u043E\u043D\u043A\u0443\u0440\u0435\u043D\u0446\u0438\u044F"
+                                ),
+                                _react2.default.createElement("img", { className: "videoc-img-meter", src: "/images/sm_md.png" })
+                            )
+                        ),
+                        _react2.default.createElement(
+                            "div",
+                            { className: "row rating-section" },
+                            _react2.default.createElement(
+                                "div",
+                                { className: "col-md-12" },
+                                _react2.default.createElement(
+                                    "h3",
+                                    null,
+                                    "\u0420\u0435\u0439\u0442\u0438\u043D\u0433 \u0442\u0435\u0433\u0430"
+                                ),
+                                _react2.default.createElement(
+                                    "div",
+                                    { className: "row" },
+                                    _react2.default.createElement(
+                                        "div",
+                                        { className: "col-md-4" },
+                                        _react2.default.createElement(
+                                            "div",
+                                            { className: "meter-count" },
+                                            ".."
+                                        )
+                                    ),
+                                    _react2.default.createElement(
+                                        "div",
+                                        { className: "col-md-8" },
+                                        _react2.default.createElement(
+                                            "p",
+                                            { className: "points-exp" },
+                                            "\u041C\u0430\u043B\u043E \u043F\u043E\u0438\u0441\u043A\u0430 \u0441\u0440\u0435\u0434\u043D\u044F\u044F \u043A\u043E\u043D\u043A\u0443\u0440\u0435\u043D\u0446\u0438\u044F"
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "row box" },
+                        _react2.default.createElement(
+                            "div",
+                            { className: "pop-container col-md-6" },
+                            _react2.default.createElement(
+                                "h3",
+                                null,
+                                "\u041F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u043E \u043D\u0430 \u044E\u0442\u0443\u0431\u0435"
+                            ),
+                            _react2.default.createElement("div", { className: "popular-youtube" })
+                        ),
+                        _react2.default.createElement(
+                            "div",
+                            { className: "pop-container col-md-6" },
+                            _react2.default.createElement(
+                                "h3",
+                                null,
+                                "\u041B\u0438\u0434\u0435\u0440\u044B \u0442\u0440\u0435\u043D\u0434\u043E\u0432"
+                            ),
+                            _react2.default.createElement("div", { className: "google-trends" })
+                        )
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "row box" },
+                        _react2.default.createElement(
+                            "div",
+                            { className: "col-lg-4 auto-section" },
+                            _react2.default.createElement("img", { src: "/images/google.png" }),
+                            _react2.default.createElement("ul", { className: "google-auto auto-list" })
+                        ),
+                        _react2.default.createElement(
+                            "div",
+                            { className: "col-lg-4 auto-section" },
+                            _react2.default.createElement("img", { src: "/images/youtube.png" }),
+                            _react2.default.createElement("ul", { className: "youtube-auto auto-list" })
+                        ),
+                        _react2.default.createElement(
+                            "div",
+                            { className: "col-lg-4 auto-section" },
+                            _react2.default.createElement("img", { src: "/images/yandex.png" }),
+                            _react2.default.createElement("ul", { className: "yandex-auto auto-list" })
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return TagFinder;
+}(_react2.default.Component);
+
+exports.default = TagFinder;
 
 /***/ }),
 
@@ -24400,6 +24948,14 @@ var _ControlPanel = __webpack_require__(/*! ./ControlPanel */ "./public/javascri
 
 var _ControlPanel2 = _interopRequireDefault(_ControlPanel);
 
+var _Step = __webpack_require__(/*! ./Step */ "./public/javascripts/components/Step.js");
+
+var _Step2 = _interopRequireDefault(_Step);
+
+var _TagFinder = __webpack_require__(/*! ./TagFinder */ "./public/javascripts/components/TagFinder.js");
+
+var _TagFinder2 = _interopRequireDefault(_TagFinder);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -24418,295 +24974,69 @@ var YouTagsTool = function (_React$Component) {
     }
 
     _createClass(YouTagsTool, [{
-        key: "click",
-        value: function click() {
-            this.props.testClick();
+        key: "checkListOpen",
+        value: function checkListOpen() {
+            this.props.checkListOpen();
+        }
+    }, {
+        key: "tagExplorerOpen",
+        value: function tagExplorerOpen() {
+            this.props.tagExplorerOpen();
+        }
+    }, {
+        key: "restartSteps",
+        value: function restartSteps() {
+            this.props.restartSteps();
+        }
+    }, {
+        key: "stepExecution",
+        value: function stepExecution(stepNum, executed) {
+            this.props.executeStep(stepNum, executed);
+        }
+    }, {
+        key: "stepToggling",
+        value: function stepToggling(stepNum, opened) {
+            this.props.openStep(stepNum, opened);
         }
     }, {
         key: "render",
         value: function render() {
+            var _this2 = this;
+
             var visibleStyle = { display: "block" };
             var invisibleStyle = { display: "none" };
-            var checkListStyle = {};
-            var tagsFinderStyle = {};
-            if (this.props.checkListActive) {
-                checkListStyle = visibleStyle;
-                tagsFinderStyle = invisibleStyle;
-            } else {
-                checkListStyle = invisibleStyle;
-                tagsFinderStyle = visibleStyle;
-            }
+
+            var checkListStyle = this.props.checkListActive ? visibleStyle : invisibleStyle;
+            var tagsFinderStyle = this.props.checkListActive ? invisibleStyle : visibleStyle;
+
+            var allSteps = this.props.checkList.map(function (step, i) {
+                return _react2.default.createElement(_Step2.default, {
+                    key: i,
+                    stepNum: i,
+                    step: step,
+                    stepToggling: _this2.stepToggling.bind(_this2),
+                    stepExecution: _this2.stepExecution.bind(_this2)
+                });
+            });
 
             return _react2.default.createElement(
                 "div",
                 { className: "te-explorer" },
-                _react2.default.createElement(_ControlPanel2.default, null),
+                _react2.default.createElement(_ControlPanel2.default, {
+                    activeCheckListTab: this.props.checkListActive,
+                    onCheckListClick: this.checkListOpen.bind(this),
+                    onRestartStepsClick: this.restartSteps.bind(this),
+                    onTagExplorerClick: this.tagExplorerOpen.bind(this)
+                }),
                 _react2.default.createElement(
                     "div",
                     { id: "check-list-row", style: checkListStyle, className: "steps-container" },
-                    _react2.default.createElement(
-                        "div",
-                        { className: "list-element", onClick: this.click.bind(this) },
-                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
-                        _react2.default.createElement(
-                            "span",
-                            { className: "step-title" },
-                            "1. \u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u044B\u0432\u0430\u0435\u043C \u0432\u0438\u0434\u0435\u043E \u0444\u0430\u0439\u043B ",
-                            this.props.checkListActive
-                        ),
-                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
-                    ),
-                    _react2.default.createElement(
-                        "div",
-                        { className: "list-element" },
-                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
-                        _react2.default.createElement(
-                            "span",
-                            { className: "step-title" },
-                            "2. \u041F\u043E\u0434\u0431\u0438\u0440\u0430\u0435\u043C \u043F\u043E\u0438\u0441\u043A\u043E\u0432\u044B\u0435 \u0442\u0435\u0433\u0438"
-                        ),
-                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
-                    ),
-                    _react2.default.createElement(
-                        "div",
-                        { className: "list-element" },
-                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
-                        _react2.default.createElement(
-                            "span",
-                            { className: "step-title" },
-                            "3. \u041F\u043E\u0434\u0431\u0438\u0440\u0430\u0435\u043C \u0442\u0435\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u0435 \u0442\u0435\u0433\u0438"
-                        ),
-                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
-                    ),
-                    _react2.default.createElement(
-                        "div",
-                        { className: "list-element" },
-                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
-                        _react2.default.createElement(
-                            "span",
-                            { className: "step-title" },
-                            "4. \u041F\u043E\u0434\u0431\u0438\u0440\u0430\u0435\u043C \u0431\u0440\u0435\u043D\u0434\u0438\u0440\u0443\u044E\u0449\u0438\u0435 \u0442\u0435\u0433\u0438"
-                        ),
-                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
-                    ),
-                    _react2.default.createElement(
-                        "div",
-                        { className: "list-element" },
-                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
-                        _react2.default.createElement(
-                            "span",
-                            { className: "step-title" },
-                            "5. \u041F\u0440\u0438\u0434\u0443\u043C\u044B\u0432\u0430\u0435\u043C \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0434\u043B\u044F \u0432\u0438\u0434\u0435\u043E"
-                        ),
-                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
-                    ),
-                    _react2.default.createElement(
-                        "div",
-                        { className: "list-element" },
-                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
-                        _react2.default.createElement(
-                            "span",
-                            { className: "step-title" },
-                            "6. \u0421\u043E\u0441\u0442\u0430\u0432\u043B\u044F\u0435\u043C \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u043A \u0432\u0438\u0434\u0435\u043E"
-                        ),
-                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
-                    ),
-                    _react2.default.createElement(
-                        "div",
-                        { className: "list-element" },
-                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
-                        _react2.default.createElement(
-                            "span",
-                            { className: "step-title" },
-                            "7. \u0421\u043E\u0437\u0434\u0430\u0435\u043C \u043F\u0440\u0435\u0432\u044C\u044E"
-                        ),
-                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
-                    ),
-                    _react2.default.createElement(
-                        "div",
-                        { className: "list-element" },
-                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
-                        _react2.default.createElement(
-                            "span",
-                            { className: "step-title" },
-                            "8. \u041D\u0430\u0441\u0442\u0440\u0430\u0438\u0432\u0430\u0435\u043C \u0437\u0430\u0441\u0442\u0430\u0432\u043A\u0438 \u0438 \u043F\u043E\u0434\u0441\u043A\u0430\u0437\u043A\u0438"
-                        ),
-                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
-                    ),
-                    _react2.default.createElement(
-                        "div",
-                        { className: "list-element" },
-                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
-                        _react2.default.createElement(
-                            "span",
-                            { className: "step-title" },
-                            "9. \u0421\u043E\u0437\u0434\u0430\u0434\u0438\u043C \u043F\u043B\u0435\u0439\u043B\u0438\u0441\u0442\u044B"
-                        ),
-                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
-                    ),
-                    _react2.default.createElement(
-                        "div",
-                        { className: "list-element" },
-                        _react2.default.createElement("input", { type: "checkbox", className: "step-checkbox" }),
-                        _react2.default.createElement(
-                            "span",
-                            { className: "step-title" },
-                            "10. \u0418\u0449\u0435\u043C \u0442\u0440\u0430\u0444\u0438\u043A \u043D\u0430 \u0432\u0438\u0434\u0435\u043E."
-                        ),
-                        _react2.default.createElement("img", { className: "caret-down", src: "/images/caret-down.png" })
-                    )
+                    allSteps
                 ),
                 _react2.default.createElement(
                     "div",
                     { id: "tag-row", style: tagsFinderStyle },
-                    _react2.default.createElement(
-                        "div",
-                        { className: "search-section" },
-                        _react2.default.createElement(
-                            "div",
-                            { className: "search-control" },
-                            _react2.default.createElement("input", { className: "te-tag-input", placeholder: "\u041F\u043E\u0438\u0441\u043A \u0442\u0435\u0433\u043E\u0432" }),
-                            _react2.default.createElement("a", { className: "te-find btn btn-sm btn-outline-secondary" })
-                        )
-                    ),
-                    _react2.default.createElement(
-                        "div",
-                        { className: "search-img-section" },
-                        _react2.default.createElement("img", { className: "search-img-big", src: "/images/search.png" }),
-                        _react2.default.createElement("br", null),
-                        _react2.default.createElement(
-                            "h3",
-                            null,
-                            "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0442\u0435\u043A\u0441\u0442 \u0438 \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u043F\u043E\u0438\u0441\u043A"
-                        )
-                    ),
-                    _react2.default.createElement(
-                        "div",
-                        { className: "results", style: invisibleStyle },
-                        _react2.default.createElement(
-                            "div",
-                            { className: "row load-gif-container box" },
-                            _react2.default.createElement(
-                                "div",
-                                { className: "col-md-12 meter" },
-                                _react2.default.createElement("img", { className: "load-img", src: "/images/load.gif" }),
-                                _react2.default.createElement(
-                                    "h3",
-                                    null,
-                                    "\u0412\u044B\u0447\u0438\u0441\u043B\u044F\u0435\u043C \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043A\u0443 \u0442\u0435\u0433\u0430..."
-                                )
-                            )
-                        ),
-                        _react2.default.createElement(
-                            "div",
-                            { className: "meters-container box", style: invisibleStyle },
-                            _react2.default.createElement(
-                                "div",
-                                { className: "row speedometer-section" },
-                                _react2.default.createElement(
-                                    "div",
-                                    { className: "col-md-6 meter search-value" },
-                                    _react2.default.createElement(
-                                        "h3",
-                                        null,
-                                        "\u041E\u0431\u044A\u0435\u043C \u043F\u043E\u0438\u0441\u043A\u0430"
-                                    ),
-                                    _react2.default.createElement("img", { className: "sv-img-meter", src: "/images/sm_md.png" })
-                                ),
-                                _react2.default.createElement(
-                                    "div",
-                                    { className: "col-md-6 meter search-count" },
-                                    _react2.default.createElement(
-                                        "h3",
-                                        null,
-                                        "\u041A\u043E\u043D\u043A\u0443\u0440\u0435\u043D\u0446\u0438\u044F"
-                                    ),
-                                    _react2.default.createElement("img", { className: "videoc-img-meter", src: "/images/sm_md.png" })
-                                )
-                            ),
-                            _react2.default.createElement(
-                                "div",
-                                { className: "row rating-section" },
-                                _react2.default.createElement(
-                                    "div",
-                                    { className: "col-md-12" },
-                                    _react2.default.createElement(
-                                        "h3",
-                                        null,
-                                        "\u0420\u0435\u0439\u0442\u0438\u043D\u0433 \u0442\u0435\u0433\u0430"
-                                    ),
-                                    _react2.default.createElement(
-                                        "div",
-                                        { className: "row" },
-                                        _react2.default.createElement(
-                                            "div",
-                                            { className: "col-md-4" },
-                                            _react2.default.createElement(
-                                                "div",
-                                                { className: "meter-count" },
-                                                ".."
-                                            )
-                                        ),
-                                        _react2.default.createElement(
-                                            "div",
-                                            { className: "col-md-8" },
-                                            _react2.default.createElement(
-                                                "p",
-                                                { className: "points-exp" },
-                                                "\u041C\u0430\u043B\u043E \u043F\u043E\u0438\u0441\u043A\u0430 \u0441\u0440\u0435\u0434\u043D\u044F\u044F \u043A\u043E\u043D\u043A\u0443\u0440\u0435\u043D\u0446\u0438\u044F"
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        ),
-                        _react2.default.createElement(
-                            "div",
-                            { className: "row box" },
-                            _react2.default.createElement(
-                                "div",
-                                { className: "pop-container col-md-6" },
-                                _react2.default.createElement(
-                                    "h3",
-                                    null,
-                                    "\u041F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u043E \u043D\u0430 \u044E\u0442\u0443\u0431\u0435"
-                                ),
-                                _react2.default.createElement("div", { className: "popular-youtube" })
-                            ),
-                            _react2.default.createElement(
-                                "div",
-                                { className: "pop-container col-md-6" },
-                                _react2.default.createElement(
-                                    "h3",
-                                    null,
-                                    "\u041B\u0438\u0434\u0435\u0440\u044B \u0442\u0440\u0435\u043D\u0434\u043E\u0432"
-                                ),
-                                _react2.default.createElement("div", { className: "google-trends" })
-                            )
-                        ),
-                        _react2.default.createElement(
-                            "div",
-                            { className: "row box" },
-                            _react2.default.createElement(
-                                "div",
-                                { className: "col-lg-4 auto-section" },
-                                _react2.default.createElement("img", { src: "/images/google.png" }),
-                                _react2.default.createElement("ul", { className: "google-auto auto-list" })
-                            ),
-                            _react2.default.createElement(
-                                "div",
-                                { className: "col-lg-4 auto-section" },
-                                _react2.default.createElement("img", { src: "/images/youtube.png" }),
-                                _react2.default.createElement("ul", { className: "youtube-auto auto-list" })
-                            ),
-                            _react2.default.createElement(
-                                "div",
-                                { className: "col-lg-4 auto-section" },
-                                _react2.default.createElement("img", { src: "/images/yandex.png" }),
-                                _react2.default.createElement("ul", { className: "yandex-auto auto-list" })
-                            )
-                        )
-                    )
+                    _react2.default.createElement(_TagFinder2.default, null)
                 )
             );
         }
@@ -24717,8 +25047,20 @@ var YouTagsTool = function (_React$Component) {
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     return {
-        testClick: function testClick() {
+        checkListOpen: function checkListOpen() {
+            return dispatch((0, _actions.ToCheckListAction)());
+        },
+        tagExplorerOpen: function tagExplorerOpen() {
             return dispatch((0, _actions.ToTagFinderAction)());
+        },
+        restartSteps: function restartSteps() {
+            return dispatch((0, _actions.RestartSteps)());
+        },
+        executeStep: function executeStep(stepNum, executed) {
+            return dispatch((0, _actions.ExecuteStep)(stepNum, executed));
+        },
+        openStep: function openStep(stepNum, opened) {
+            return dispatch((0, _actions.ToggleStep)(stepNum, opened));
         }
     };
 };
@@ -24836,10 +25178,93 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; //var dotProp = require('dot-prop-immutable');
+
+
+var _dotPropImmutable = __webpack_require__(/*! dot-prop-immutable */ "./node_modules/dot-prop-immutable/index.js");
+
+var _dotPropImmutable2 = _interopRequireDefault(_dotPropImmutable);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var initState = {
-    checkListActive: true
+    checkListActive: true,
+    tagFinder: {
+        isFired: false,
+        requesting: false,
+        findText: "",
+        tagRating: { score: 0, text: "" },
+        popular: {
+            youPopular: [],
+            trendsPopular: []
+        },
+        autoSugest: {
+            google: [],
+            yandex: [],
+            youtube: []
+        }
+    },
+    checkList: [{
+        executed: false,
+        opened: false,
+        name: "1. Переименовываем видео файл",
+        guidance: "Название файла - это первый шаг к оптимизации видео. Оно участвует в поисковой выдаче YouTube, Google, Yandex.",
+        advices: ["По названию файла должно быть понятна тема видео, например, «обзор на мотоцикл.mov» или «монтаж кровли.mp4»", "Не оставляйте название файла стандартным, таким как: MVI_0441.MOV", "Правильное название файла увеличивает кол-во просмотров за счет выдачи в поисковых системах."]
+    }, {
+        executed: false,
+        opened: false,
+        name: "2. Подбираем поисковые теги",
+        guidance: "Теги — это метки по которым зритель может найти ваше видео в поисковой выдаче или в рекомендованных и похожих видео. Поэтому мы начинаем оптимизацию наших видео именно с тегов, а не с названия и описания.",
+        advices: ["Наша задача найти поисковые запросы с максимальным объемом поиска и минимальным количеством конкуренции.", "Если вы делаете обзор чего-либо попробуйте проверить тег «обзор на сноуборд», «сноуборд обзор» вместо «обзор сноуборда».", "Обратите внимание на предложенное в \"Поиске тегов\". Среди них могут быть теги с высокими поисковыми показателями.", "Если ваше видео отвечает на вопросы «как?», «что?», «где?», «когда?» - используйте эти слова в поисковых тегах."]
+    }, {
+        executed: false,
+        opened: false,
+        name: "3. Подбираем тематические теги",
+        guidance: "Данная группа тегов нужна для попадания нашего видео в список рекомендованного к видео уже набравшим популярность. Данные теги могут иметь плохой поисковой рейтинг.",
+        advices: ["Рассмотрите предложенные теги в списке «Популярно на ютубе» и «Популярные тренды».", "В данный список не пишите теги с опечатками и на транслите."]
+    }, {
+        executed: false,
+        opened: false,
+        name: "4. Подбираем брендирующие теги",
+        guidance: "Используя уникальные, повторяющиеся теги под всеми нашими видео мы формируем список рекомендаций состоящий только из наших контента.",
+        advices: ["Придумайте уникальные для своего канала теги. Например: «СамыйЛучшийЗаводВМире» «СЛЗВМобзор»", "Показатели данной группы тегов не важны.", "Не используйте чужие брендирующие теги такие как: «Трансформатор», «Дудь», «Славный обзор»."]
+    }, {
+        executed: false,
+        opened: false,
+        name: "5. Придумываем название для видео",
+        guidance: "Название должно вызывать у человека желание кликнуть на видео.",
+        advices: ["Первая часть названия - популярный тематический тег.", "Вторая часть названия - поисковой запрос с наибольшим рейтингом.", "Третья часть названия - (по желанию) 2-й поисковой запрос.", "Название должно полностью соответствовать содержанию видео. Не вводите в заблуждение своих зрителей иначе они покинут ваше видео.", "Если у вас серийный контент не забудьте включить номер эпизода в название."]
+    }, {
+        executed: false,
+        opened: false,
+        name: "6. Составляем описание к видео",
+        guidance: "Задача на этом этапе продублировать теги в описании, чтобы придать видео наибольший ранжирующий фактор.",
+        advices: ["Описание должно быть логически выстроенным. Описание такое как: «купить дом, купить дом в Москве, как купить дом в Москве дешево» нарушают правила сообщества YouTube и могут привести к блокировке канала.", "В тексте необходимо описать происходящее на видео с повторением поисковых, тематических и брендирующих тегов.", "В конце описания оставьте свои контакты и ссылки на другие ваши видео по смежной тематике."]
+    }, {
+        executed: false,
+        opened: false,
+        name: "7. Создаем превью",
+        guidance: "Превью - картинка-обложка видео по которой человек должен понять, о чем пойдет речь в видео. Уделите особое внимание созданию превью, это как раз тот случай, когда о книге будут судить по обложке.",
+        advices: ["Превью должно быть с минимальным разрешением 1280х720.", "50% просмотров идет с мобильных устройств. Превью должно быть читаемо даже с небольших экранов смартфонов.", "Постарайтесь придерживаться определенного стиля на всех своих превью.", "Показатель кликабельности (CTR) картинки можно посмотреть в творческой студии.", "Поэкспериментируйте с текстами на картинке и эмоциями человека на ней. Используйте яркие цвета, различных вариантов выделения отдельных объектов."]
+    }, {
+        executed: false,
+        opened: false,
+        name: "8. Настраиваем заставки и подсказки",
+        guidance: "Конечные заставки и подсказки - это ссылки в самом видео, которые ведут на другие ваши видео, плейлисты, сайты.",
+        advices: ["10% трафика канала может состоять из переходов по конечным заставкам и подсказкам.", "Рекомендуем использовать в конечных заставках шаблон: 2 видео + 1 подписка на канал.", "В качестве цели конечной заставки используйте «новое» и «рекомендуемое» видео."]
+    }, {
+        executed: false,
+        opened: false,
+        name: "9. Создадим плейлисты",
+        guidance: "Плейлист это список видео, которые воспроизводятся последовательно, в том порядке какой вы сами выберете. Плейлисты должны быть сегментированы по тематике видео.",
+        advices: ["Плейлисты участвуют в поисковой выдаче YouTube и имеют больший вес при ранжировании.", "Если загружаемое видео не подходит по смыслу ни в один ваших плейлист создайте новый."]
+    }, {
+        executed: false,
+        opened: false,
+        name: "10. Ищем трафик на видео.",
+        guidance: "Последний шаг оптимизации видео - сбор аналитики с максимальной объемной фокус группы.",
+        advices: ["Зарепостите свое видео в социальные сети или купите платную рекламу.", "Попробуйте создать треды в тематических форумах или на бордах.", "У вас есть 2 дня после публикации видео для первоначального сбора аналитики основных параметров органического продвижения."]
+    }]
 };
 
 function reducer() {
@@ -24852,6 +25277,23 @@ function reducer() {
             return _extends({}, state, { checkListActive: true });
         case "ToTagFinder":
             return _extends({}, state, { checkListActive: false });
+        case "ExecuteStep":
+            {
+                return _dotPropImmutable2.default.set(state, "checkList." + action.payload.stepNum + ".executed", action.payload.executed);
+            }
+        case "ToggleStep":
+            {
+                return _dotPropImmutable2.default.set(state, "checkList." + action.payload.stepNum + ".opened", action.payload.opened);
+            }
+        case "RestartSteps":
+            {
+                var newState = _extends({}, state);
+                for (var i = 0; i < state.checkList.length; i++) {
+                    newState = _dotPropImmutable2.default.set(newState, "checkList." + i + ".executed", false);
+                }
+                return newState;
+            }
+
         default:
             return state;
     }

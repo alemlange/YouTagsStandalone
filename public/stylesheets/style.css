@@ -172,9 +172,7 @@ a {
 .te-find {
   height: 29px;
   width: 61px;
-  background: url("../images/search-sm.png");
-  background-position: 22px 6px;
-  background-repeat: no-repeat;
+  background: url("../images/search-sm.png") no-repeat 22px 6px !important;
 }
 
 .search-control {
