@@ -1,6 +1,6 @@
 import React from "react"
 import {connect} from "react-redux"
-import {ToCheckListAction, ToTagFinderAction, ExecuteStep, ToggleStep, RestartSteps} from "../actions"
+import {ToCheckListAction, ToTagFinderAction, ExecuteStep, ToggleStep, RestartSteps, RequestTagStatistics, ChangeFindText} from "../actions"
 import ControlPanel from "./ControlPanel";
 import Step from "./Step";
 import TagFinder from "./TagFinder";
@@ -28,6 +28,14 @@ class YouTagsTool extends React.Component {
 
     stepToggling(stepNum, opened){
         this.props.openStep(stepNum, opened)
+    }
+
+    getTagStatistics(tag){
+        this.props.getTagStatistics(tag);
+    }
+
+    changeTagText(text){
+        this.props.changeTagText(text);
     }
 
     render() {
@@ -60,7 +68,7 @@ class YouTagsTool extends React.Component {
                 <div id="check-list-row" style={checkListStyle} className="steps-container">{allSteps}</div>
 
                 <div id="tag-row" style={tagsFinderStyle}>
-                    <TagFinder/>
+                    <TagFinder tagFinder={this.props.tagFinder} onFindClick = {this.getTagStatistics.bind(this)} onTextChange={this.changeTagText.bind(this)}/>
                 </div>
 
             </div>
@@ -74,7 +82,9 @@ const mapDispatchToProps = (dispatch) =>{
         tagExplorerOpen: () => dispatch(ToTagFinderAction()),
         restartSteps: ()=> dispatch(RestartSteps()),
         executeStep: (stepNum, executed) => dispatch(ExecuteStep(stepNum, executed)),
-        openStep: (stepNum, opened) => dispatch(ToggleStep(stepNum, opened))
+        openStep: (stepNum, opened) => dispatch(ToggleStep(stepNum, opened)),
+        getTagStatistics: (tag) => dispatch(RequestTagStatistics(tag)),
+        changeTagText: (text) =>dispatch(ChangeFindText(text))
     }
 };
 

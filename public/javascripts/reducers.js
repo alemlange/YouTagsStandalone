@@ -5,6 +5,7 @@ const initState = {
     checkListActive: true,
     tagFinder:{
         isFired: false,
+        isFetchingData: false,
         requesting:false,
         findText: "",
         tagRating: {score:0, text: ""},
@@ -154,6 +155,26 @@ function reducer(state = initState, action){
                 newState = dotProp.set(newState, `checkList.${i}.executed`, false);
             }
             return newState;
+        }
+        case "ChangeFindText":{
+            return dotProp.set(state, `tagFinder.findText`, action.payload);
+        }
+        case "TagStatisticsRequest":{
+            let newState = dotProp.set(state, `tagFinder.isFired`, true);
+            return dotProp.set(newState, `tagFinder.isFetchingData`, true);
+        }
+        case "TagStatisticsScore":{
+            let newState = dotProp.set(state, `tagFinder.isFetchingData`, false);
+            return dotProp.set(newState, `tagFinder.tagRating`, action.payload);
+        }
+        case "ChangeYandexAuto":{
+            return dotProp.set(state, `tagFinder.autoSugest.yandex`, action.payload);
+        }
+        case "ChangeGoogleAuto":{
+            return dotProp.set(state, `tagFinder.autoSugest.google`, action.payload);
+        }
+        case "ChangeYoutubeAuto":{
+            return dotProp.set(state, `tagFinder.autoSugest.youtube`, action.payload);
         }
 
         default:
