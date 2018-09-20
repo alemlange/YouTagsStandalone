@@ -1,4 +1,5 @@
 import React from "react"
+import PropTypes from 'prop-types';
 
 export default class ControlPanel extends React.Component {
     constructor(props) {
@@ -21,9 +22,8 @@ export default class ControlPanel extends React.Component {
     }
 
     render() {
-
-        let checkTabClass = this.props.activeCheckListTab ? "check-control section-link active": "check-control section-link";
-        let tagTabClass = this.props.activeCheckListTab ? "tag-control section-link": "tag-control section-link active";
+        let checkTabClass = this.props.activeCheckListTab ? "section-link active": "section-link";
+        let tagTabClass = this.props.activeCheckListTab ? "section-link": "section-link active";
         return (
             <div className="control-panel">
                 <a href="#" className="btn menu-btn" onClick={this.menuBtnClick.bind(this)}/>
@@ -33,3 +33,7 @@ export default class ControlPanel extends React.Component {
         );
     }
 }
+
+ControlPanel.propTypes = {
+    activeCheckListTab: PropTypes.bool.isRequired
+};

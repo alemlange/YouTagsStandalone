@@ -1,0 +1,15 @@
+{
+    "short_name": "YouTags",
+    "name": "YouTags Standalone",
+    "icons": [
+    {
+        "src":"images/yt48.png",
+        "sizes": "192x192",
+        "type": "image/png"
+    }
+],
+    "start_url": "/",
+    "background_color": "#f1f1f1",
+    "theme_color": "#f1f1f1",
+    "display": "standalone"
+}

@@ -1,38 +1,75 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+@media only screen and (max-width: 900px) {
+  /* For mobile phones: */
+  [class*="te-explorer"] {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  [id*="root"] {
+      padding: 0 !important;
+  }
 }
 
-.te-explorer * {
-  box-sizing: border-box;
+body {
+  background-color: #f1f1f1 !important;
 }
 
 h3 {
   font-size: 14px !important;
 }
 
+#root{
+    padding: 10%;
+}
+
+.te-explorer * {
+  box-sizing: border-box;
+}
+
+.index-loading{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 #overlay {
-  background-color: rgba(255, 0, 0,0.7);
+  background-color: rgb(241, 241, 241);
   z-index: 999;
   position: absolute;
   top: 0;
   right: 0;
   width: 100%;
   height: 100%;
-  /*display: none;*/
+  padding: 10%;
+}
+
+.message-container{
+    text-align: center;
+    background: white;
+    padding: 43px;
+}
+
+.overlay-header-container{
+    display:inline-flex;
+}
+
+.overlay-logo{
+    margin-right: 10px;
 }
 
 .te-explorer {
-  position: fixed;
+  /*position: fixed;*/
   background-color: rgb(241, 241, 241);
-  top: 228px;
+  /*top: 228px;
   left: 50%;
-  margin-left: -200px;
+  margin-left: -200px;*/
   border: 1px solid rgb(204, 204, 204);
-  /*padding: 3px 12px 8px 12px;*/
   border-radius: 3px;
-  width: 400px;
+  /*width: 400px;*/
   height: 500px;
+  width: 50%;
+  margin-left: 25%;
 }
 
 .menu-btn {
@@ -59,28 +96,23 @@ h3 {
 }
 
 .box {
+  display: flex;
   background-color: white;
   padding: 13px;
-  margin: 0 0 10px;
+  margin: 0 0 10px 0 !important;
   box-shadow: 0 1px 2px rgba(0,0,0,.1);
 }
 
 .check-container {
-  border-right: black;
-  border-right-style: groove;
-  border-right-width: 1px;
+  border-right: 1px groove black;
   height: 300px;
 }
 
 .list-element {
   background-color: white;
   padding: 7px 7px;
-  margin: 0px 4px 4px;
+  margin: 0 4px 4px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px;
-}
-
-a {
-  font-family: Roboto, Arial, sans-serif;
 }
 
 .section-link {
@@ -96,8 +128,7 @@ a {
 }
 
 .section-link.active {
-  border-bottom: 3px solid;
-  border-bottom-color: red;
+  border-bottom: 3px solid red;
   color: rgba(10,10,10,1);
   text-decoration: none
 }
@@ -130,9 +161,7 @@ a {
 
 .step-guidance {
   margin: 0;
-  padding: 7px;
-  padding-left: 18px;
-  padding-right: 3px;
+  padding: 7px 3px 7px 18px;
   font-size: 16px;
 }
 
@@ -143,8 +172,8 @@ a {
 .control-panel {
   line-height: 2;
   height: 33px;
-  padding: 0px 13px 0px 5px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px;
+  padding: 0 13px 0 5px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px;
   border-bottom: none;
   margin-bottom: 10px;
   background-color: white;
@@ -154,17 +183,19 @@ a {
   float: right;
   text-align: right;
   position: relative;
-  margin-right:0px !important;
+  margin-right:0 !important;
 }
 
 .search-section {
-  padding: 0px 10px 0px;
+  padding: 0 10px 0;
 }
 
 .te-tag-input {
+  display: table-cell;
   font-family: "YouTube Noto",Roboto,arial,sans-serif;
   font-size: 13px;
-  width: 274px;
+  /*width: 274px;*/
+  width: 98%;
   margin-right: 10px;
   height: 29px;
 }
@@ -172,23 +203,26 @@ a {
 .te-find {
   height: 29px;
   width: 61px;
+  display: table-cell !important;
   background: url("../images/search-sm.png") no-repeat 22px 6px !important;
 }
 
 .search-control {
+  display: table;
+  width: 100%;
   margin-bottom: 10px;
   padding: 9px 12px 7px;
   background-color: white;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px;
 }
 
 .search-img-section {
   height: 370px;
   padding: 130px 75px 130px 75px;
-  margin: 0px 10px 0px;
+  margin: 0 10px 0;
   text-align: center;
   background-color: white;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px;
 }
 
 .search-img-big {
@@ -202,6 +236,10 @@ a {
   padding: 10px;
 }
 
+.tag-rating-label{
+  text-align: center;
+}
+
 .diamond-rating {
   width: 150px;
 }
@@ -212,22 +250,26 @@ a {
 }
 
 .pop-container {
-  margin: 0px 0px 10px 0px;
-  padding: 0px 0px 0px;
+  margin: 0 0 10px 0;
+  padding: 0 0 0;
   text-align: center;
 }
 
 .speedometer-section {
-  margin: 0px 0px 0px 6px;
+  margin: 0 0 0 6px;
 }
 
 .rating-section {
-  margin: 0px 0px 0px 6px;
+  margin: 0 0 0 6px;
 }
 
 .popular-youtube {
   margin-top: 5px;
   font-size: 15px;
+}
+
+.popular-text{
+  display: block;
 }
 
 .google-trends {
@@ -246,11 +288,10 @@ a {
 .meter-count {
   font-size: 22px;
   text-align:center;
-  /*color: green;*/
 }
 
 .element {
-  margin-top: 0px;
+  margin-top: 0;
   margin-bottom: 8px;
 }
 
@@ -264,7 +305,7 @@ a {
 }
 
 .bullet-list {
-  padding-left: 0px;
+  padding-left: 0;
   list-style-type: disc;
   font-size: 14px;
   margin-bottom: 5px;
@@ -277,11 +318,11 @@ a {
 }
 
 .auto-section{
-  padding: 0px 10px;
+  padding: 0 10px;
 }
 
 .auto-list {
-  padding-left: 0px;
+  padding-left: 0;
 }
 
 .auto-elem {

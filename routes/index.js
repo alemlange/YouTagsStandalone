@@ -1,13 +1,11 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
   let cookies = req.cookies;
   let greetOk = cookies["GreetingOk"];
 
-  let model = {greetingShown:false, title:"Заголовок"};
-  model.greetingShown = !!greetOk;
+  let model = {greetingShown:!!greetOk, title:"YouTags Standalone"};
 
   res.render('index', { model: model });
 });

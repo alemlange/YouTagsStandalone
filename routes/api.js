@@ -1,11 +1,14 @@
 var express = require('express');
 var router = express.Router();
 
-const autosuggestConroller = require('../controllers/autosuggestController');
-const trendsConroller = require('../controllers/trendsController');
+const autosuggestController = require('../controllers/autosuggestController');
+const trendsController = require('../controllers/trendsController');
+const scoreController = require('../controllers/scoreController');
 
-router.get('/trends',trendsConroller.getTrends);
+router.get('/trends',trendsController.getTrends);
 
-router.get('/autosuggest', autosuggestConroller.getAutosuggested);
+router.get('/autosuggest', autosuggestController.getAutosuggested);
+
+router.get('/tagscore', scoreController.getScore);
 
 module.exports = router;

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "webpack": "webpack",
-    "start": "node ./bin/www"
+    "start": "node app"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
@@ -26,6 +26,7 @@
     "http-errors": "~1.6.2",
     "jquery": "^3.3.1",
     "morgan": "~1.9.0",
+    "prop-types": "^15.6.2",
     "react": "^16.5.1",
     "react-dom": "^16.5.1",
     "react-redux": "^5.0.7",

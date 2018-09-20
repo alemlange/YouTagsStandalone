@@ -35,7 +35,6 @@ export default class Step extends React.Component {
                     <ul className="bullet-list">{allAdvices}</ul>
                 </div>
             </div>
-
         );
     }
 }

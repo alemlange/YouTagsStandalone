@@ -34868,10 +34868,39 @@ module.exports = function(originalModule) {
 
 /***/ }),
 
-/***/ "./public/javascripts/actions.js":
-/*!***************************************!*\
-  !*** ./public/javascripts/actions.js ***!
-  \***************************************/
+/***/ "./public/javascripts/actions/actionTypes.js":
+/*!***************************************************!*\
+  !*** ./public/javascripts/actions/actionTypes.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var TO_CHECK_LIST = exports.TO_CHECK_LIST = "TO_CHECK_LIST";
+var TO_TAG_FINDER = exports.TO_TAG_FINDER = "TO_TAG_FINDER";
+var RESTART_STEPS = exports.RESTART_STEPS = "RESTART_STEPS";
+var EXECUTE_STEP = exports.EXECUTE_STEP = "EXECUTE_STEP";
+var TOGGLE_STEP = exports.TOGGLE_STEP = "TOGGLE_STEP";
+var CHANGE_FIND_TEXT = exports.CHANGE_FIND_TEXT = "CHANGE_FIND_TEXT";
+var CHANGE_TRENDS = exports.CHANGE_TRENDS = "CHANGE_TRENDS";
+var CHANGE_YANDEX_AUTO = exports.CHANGE_YANDEX_AUTO = "CHANGE_YANDEX_AUTO";
+var CHANGE_YOUTUBE_AUTO = exports.CHANGE_YOUTUBE_AUTO = "CHANGE_YOUTUBE_AUTO";
+var CHANGE_GOOGLE_AUTO = exports.CHANGE_GOOGLE_AUTO = "CHANGE_GOOGLE_AUTO";
+var CHANGE_TAG_SCORE = exports.CHANGE_TAG_SCORE = "CHANGE_TAG_SCORE";
+var CHANGE_YOUTUBE_POPULAR = exports.CHANGE_YOUTUBE_POPULAR = "CHANGE_YOUTUBE_POPULAR";
+var TAG_STATISTICS_REQUEST = exports.TAG_STATISTICS_REQUEST = "TAG_STATISTICS_REQUEST";
+
+/***/ }),
+
+/***/ "./public/javascripts/actions/actions.js":
+/*!***********************************************!*\
+  !*** ./public/javascripts/actions/actions.js ***!
+  \***********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -34887,54 +34916,112 @@ exports.RestartSteps = RestartSteps;
 exports.ExecuteStep = ExecuteStep;
 exports.ToggleStep = ToggleStep;
 exports.ChangeFindText = ChangeFindText;
+exports.ChangeTrends = ChangeTrends;
+exports.ChangeYandexAuto = ChangeYandexAuto;
+exports.ChangeYoutubeAuto = ChangeYoutubeAuto;
+exports.ChangeGoogleAuto = ChangeGoogleAuto;
+exports.ChangeTagScore = ChangeTagScore;
+exports.ChangeYoutubePopular = ChangeYoutubePopular;
 exports.RequestTagStatistics = RequestTagStatistics;
 
-var _jquery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+var _actionTypes = __webpack_require__(/*! ./actionTypes */ "./public/javascripts/actions/actionTypes.js");
 
-var _jquery2 = _interopRequireDefault(_jquery);
+var types = _interopRequireWildcard(_actionTypes);
 
-var _AutoService = __webpack_require__(/*! ./services/AutoService */ "./public/javascripts/services/AutoService.js");
+var _AutoService = __webpack_require__(/*! ../services/AutoService */ "./public/javascripts/services/AutoService.js");
 
 var _AutoService2 = _interopRequireDefault(_AutoService);
 
+var _TrendsService = __webpack_require__(/*! ../services/TrendsService */ "./public/javascripts/services/TrendsService.js");
+
+var _TrendsService2 = _interopRequireDefault(_TrendsService);
+
+var _StatsService = __webpack_require__(/*! ../services/StatsService */ "./public/javascripts/services/StatsService.js");
+
+var _StatsService2 = _interopRequireDefault(_StatsService);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function ToCheckListAction() {
     return {
-        type: "ToCheckList"
+        type: types.TO_CHECK_LIST
     };
 }
 
 function ToTagFinderAction() {
     return {
-        type: "ToTagFinder"
+        type: types.TO_TAG_FINDER
     };
 }
 
 function RestartSteps() {
     return {
-        type: "RestartSteps"
+        type: types.RESTART_STEPS
     };
 }
 
 function ExecuteStep(stepNum, executed) {
     return {
-        type: "ExecuteStep",
+        type: types.EXECUTE_STEP,
         payload: { stepNum: stepNum, executed: executed }
     };
 }
 
 function ToggleStep(stepNum, opened) {
     return {
-        type: "ToggleStep",
+        type: types.TOGGLE_STEP,
         payload: { stepNum: stepNum, opened: opened }
     };
 }
 
 function ChangeFindText(text) {
     return {
-        type: "ChangeFindText",
+        type: types.CHANGE_FIND_TEXT,
         payload: text
+    };
+}
+
+function ChangeTrends(data) {
+    return {
+        type: types.CHANGE_TRENDS,
+        payload: data
+    };
+}
+
+function ChangeYandexAuto(data) {
+    return {
+        type: types.CHANGE_YANDEX_AUTO,
+        payload: data
+    };
+}
+
+function ChangeYoutubeAuto(data) {
+    return {
+        type: types.CHANGE_YOUTUBE_AUTO,
+        payload: data
+    };
+}
+
+function ChangeGoogleAuto(data) {
+    return {
+        type: types.CHANGE_GOOGLE_AUTO,
+        payload: data
+    };
+}
+
+function ChangeTagScore(data) {
+    return {
+        type: types.CHANGE_TAG_SCORE,
+        payload: data
+    };
+}
+
+function ChangeYoutubePopular(data) {
+    return {
+        type: types.CHANGE_YOUTUBE_POPULAR,
+        payload: data
     };
 }
 
@@ -34942,108 +35029,122 @@ function RequestTagStatistics(tag) {
     return function (dispatch) {
 
         dispatch({
-            type: "TagStatisticsRequest"
+            type: types.TAG_STATISTICS_REQUEST
         });
 
-        _jquery2.default.getJSON('https://www.googleapis.com/youtube/v3/search?key=AIzaSyD8875J05trC_O6hssu5gDTRaM1ImKZEKU&maxResults=10&relevanceLanguage=ru&regionCode=ru&q=' + tag + '&part=snippet&type=video', function (data) {
-
-            var allTags = [];
-            var allIds = [];
-            for (var i in data.items) {
-                allIds.push(data.items[i].id.videoId);
-            }
-
-            for (var _i in allIds) {
-                _jquery2.default.ajax({
-                    async: false,
-                    url: 'https://www.googleapis.com/youtube/v3/videos?key=AIzaSyD8875J05trC_O6hssu5gDTRaM1ImKZEKU&fields=items(snippet(title,description,tags))&part=snippet&id=' + allIds[_i],
-                    dataType: "json",
-                    success: function success(data) {
-                        for (var _i2 in data.items[0].snippet.tags) {
-                            allTags.push(data.items[0].snippet.tags[_i2]);
-                        }
-                    }
-                });
-            }
-            var map = new Map();
-            allTags.forEach(function (a) {
-                return map.set(a, (map.get(a) || 0) + 1);
-            });
-
-            var uniqueKeys = allTags.filter(function (a) {
-                return map.get(a) === 1;
-            });
-            for (var _i3 in uniqueKeys) {
-                map.delete(uniqueKeys[_i3]);
-            }
-
-            var notUniqueTags = [];
-            map.forEach(function (val, key) {
-                return notUniqueTags.push({ count: val, value: key });
-            });
-
-            for (var _i4 = 0; _i4 < notUniqueTags.length - 1; _i4++) {
-                for (var j = 0; j < notUniqueTags.length - 1; j++) {
-                    if (notUniqueTags[j].count < notUniqueTags[j + 1].count) {
-                        var buf = { count: notUniqueTags[j + 1].count, value: notUniqueTags[j + 1].value };
-                        notUniqueTags[j + 1].count = notUniqueTags[j].count;
-                        notUniqueTags[j + 1].value = notUniqueTags[j].value;
-
-                        notUniqueTags[j].count = buf.count;
-                        notUniqueTags[j].value = buf.value;
-                    }
-                }
-            }
-            var topFiveTags = [];
-            for (var _i5 = 0; _i5 < 5; _i5++) {
-                if (notUniqueTags.length <= _i5) break;
-                topFiveTags.push(notUniqueTags[_i5]);
-            }
-
-            var youPopular = topFiveTags.map(function (tag) {
-                return { score: tag.count, text: tag.value };
-            });
-            var totalResults = data.pageInfo.totalResults;
-
-            dispatch({
-                type: "TagStatisticsScore",
-                payload: { score: 31, text: "Очень хорооооооооший тег" }
-            });
-
-            //searchValueStats(tagQuery, totalResults);
+        _StatsService2.default.getPopularAndScore(tag, function (data) {
+            dispatch(ChangeYoutubePopular(data));
+        }, function (data) {
+            dispatch(ChangeTagScore(data));
         });
 
-        _jquery2.default.getJSON('/api/trends?keyword=' + tag, function (data) {
-
-            var trends = [];
-            for (var i = 0; i < 5; i++) {
-                if (data.length <= i) break;
-                trends.push({ score: data[i].value, text: data[i].query });
-            }
+        _TrendsService2.default.getTrends(tag, function (data) {
+            dispatch(ChangeTrends(data));
         });
 
         _AutoService2.default.searchYandexAuto(tag, function (data) {
-            dispatch({
-                type: "ChangeYandexAuto",
-                payload: data
-            });
+            dispatch(ChangeYandexAuto(data));
         });
 
         _AutoService2.default.searchGoogleAuto(tag, function (data) {
-            dispatch({
-                type: "ChangeYoutubeAuto",
-                payload: data
-            });
+            dispatch(ChangeGoogleAuto(data));
         });
 
         _AutoService2.default.searchYoutubeAuto(tag, function (data) {
-            dispatch({
-                type: "ChangeGoogleAuto",
-                payload: data
-            });
+            dispatch(ChangeYoutubeAuto(data));
         });
     };
 }
+
+/***/ }),
+
+/***/ "./public/javascripts/components/AutoBox.js":
+/*!**************************************************!*\
+  !*** ./public/javascripts/components/AutoBox.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var AutoBox = function (_React$Component) {
+    _inherits(AutoBox, _React$Component);
+
+    function AutoBox(props) {
+        _classCallCheck(this, AutoBox);
+
+        return _possibleConstructorReturn(this, (AutoBox.__proto__ || Object.getPrototypeOf(AutoBox)).call(this, props));
+    }
+
+    _createClass(AutoBox, [{
+        key: "render",
+        value: function render() {
+            var _props = this.props,
+                googleAuto = _props.googleAuto,
+                youtubeAuto = _props.youtubeAuto,
+                yandexAuto = _props.yandexAuto;
+
+
+            return _react2.default.createElement(
+                "div",
+                { className: "box" },
+                _react2.default.createElement(
+                    "div",
+                    { className: "col-lg-4 auto-section" },
+                    _react2.default.createElement("img", { src: "/images/google.png" }),
+                    _react2.default.createElement(
+                        "ul",
+                        { className: "auto-list" },
+                        googleAuto
+                    )
+                ),
+                _react2.default.createElement(
+                    "div",
+                    { className: "col-lg-4 auto-section" },
+                    _react2.default.createElement("img", { src: "/images/youtube.png" }),
+                    _react2.default.createElement(
+                        "ul",
+                        { className: "auto-list" },
+                        youtubeAuto
+                    )
+                ),
+                _react2.default.createElement(
+                    "div",
+                    { className: "col-lg-4 auto-section" },
+                    _react2.default.createElement("img", { src: "/images/yandex.png" }),
+                    _react2.default.createElement(
+                        "ul",
+                        { className: "auto-list" },
+                        yandexAuto
+                    )
+                )
+            );
+        }
+    }]);
+
+    return AutoBox;
+}(_react2.default.Component);
+
+exports.default = AutoBox;
 
 /***/ }),
 
@@ -35066,6 +35167,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -35105,9 +35210,8 @@ var ControlPanel = function (_React$Component) {
     }, {
         key: "render",
         value: function render() {
-
-            var checkTabClass = this.props.activeCheckListTab ? "check-control section-link active" : "check-control section-link";
-            var tagTabClass = this.props.activeCheckListTab ? "tag-control section-link" : "tag-control section-link active";
+            var checkTabClass = this.props.activeCheckListTab ? "section-link active" : "section-link";
+            var tagTabClass = this.props.activeCheckListTab ? "section-link" : "section-link active";
             return _react2.default.createElement(
                 "div",
                 { className: "control-panel" },
@@ -35130,6 +35234,232 @@ var ControlPanel = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = ControlPanel;
+
+
+ControlPanel.propTypes = {
+    activeCheckListTab: _propTypes2.default.bool.isRequired
+};
+
+/***/ }),
+
+/***/ "./public/javascripts/components/MetersBox.js":
+/*!****************************************************!*\
+  !*** ./public/javascripts/components/MetersBox.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var MetersBox = function (_React$Component) {
+    _inherits(MetersBox, _React$Component);
+
+    function MetersBox(props) {
+        _classCallCheck(this, MetersBox);
+
+        return _possibleConstructorReturn(this, (MetersBox.__proto__ || Object.getPrototypeOf(MetersBox)).call(this, props));
+    }
+
+    _createClass(MetersBox, [{
+        key: "render",
+        value: function render() {
+            var _props = this.props,
+                isFetchingData = _props.isFetchingData,
+                tagRating = _props.tagRating;
+
+
+            var visibleStyle = { display: "block" };
+            var invisibleStyle = { display: "none" };
+
+            var meterBoxStyle = isFetchingData ? invisibleStyle : visibleStyle;
+
+            var tagScoreStyle = { color: "#f00" };
+            if (tagRating.score >= 25 && tagRating.score < 40) {
+                tagScoreStyle = { color: "#ef7171" };
+            } else if (tagRating.score >= 40 && tagRating.score < 60) {
+                tagScoreStyle = { color: "#ffdc28" };
+            } else if (tagRating.score >= 60 && tagRating.score < 70) {
+                tagScoreStyle = { color: "#68f1ae" };
+            } else if (tagRating.score >= 70 && tagRating.score <= 100) {
+                tagScoreStyle = { color: "#03a958" };
+            }
+
+            return _react2.default.createElement(
+                "div",
+                { className: "box", style: meterBoxStyle },
+                _react2.default.createElement(
+                    "div",
+                    { className: "row speedometer-section" },
+                    _react2.default.createElement(
+                        "div",
+                        { className: "col-md-6 meter" },
+                        _react2.default.createElement(
+                            "h3",
+                            null,
+                            "\u041E\u0431\u044A\u0435\u043C \u043F\u043E\u0438\u0441\u043A\u0430"
+                        ),
+                        _react2.default.createElement("img", { src: "/images/sm_" + tagRating.searchValueQuality + ".png" })
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "col-md-6 meter" },
+                        _react2.default.createElement(
+                            "h3",
+                            null,
+                            "\u041A\u043E\u043D\u043A\u0443\u0440\u0435\u043D\u0446\u0438\u044F"
+                        ),
+                        _react2.default.createElement("img", { src: "/images/sm_" + tagRating.videoQuality + ".png" })
+                    )
+                ),
+                _react2.default.createElement(
+                    "div",
+                    { className: "row rating-section" },
+                    _react2.default.createElement(
+                        "div",
+                        { className: "col-md-12" },
+                        _react2.default.createElement(
+                            "div",
+                            { className: "row" },
+                            _react2.default.createElement(
+                                "div",
+                                { className: "col-md-4" },
+                                _react2.default.createElement(
+                                    "h3",
+                                    { className: "tag-rating-label" },
+                                    "\u0420\u0435\u0439\u0442\u0438\u043D\u0433 \u0442\u0435\u0433\u0430"
+                                ),
+                                _react2.default.createElement(
+                                    "div",
+                                    { className: "meter-count", style: tagScoreStyle },
+                                    tagRating.score
+                                )
+                            ),
+                            _react2.default.createElement(
+                                "div",
+                                { className: "col-md-8" },
+                                _react2.default.createElement(
+                                    "p",
+                                    { className: "points-exp" },
+                                    tagRating.text
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return MetersBox;
+}(_react2.default.Component);
+
+exports.default = MetersBox;
+
+/***/ }),
+
+/***/ "./public/javascripts/components/PopularBox.js":
+/*!*****************************************************!*\
+  !*** ./public/javascripts/components/PopularBox.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var PopularBox = function (_React$Component) {
+    _inherits(PopularBox, _React$Component);
+
+    function PopularBox(props) {
+        _classCallCheck(this, PopularBox);
+
+        return _possibleConstructorReturn(this, (PopularBox.__proto__ || Object.getPrototypeOf(PopularBox)).call(this, props));
+    }
+
+    _createClass(PopularBox, [{
+        key: "render",
+        value: function render() {
+            var _props = this.props,
+                youTubePopular = _props.youTubePopular,
+                trends = _props.trends;
+
+
+            return _react2.default.createElement(
+                "div",
+                { className: "box" },
+                _react2.default.createElement(
+                    "div",
+                    { className: "pop-container col-md-6" },
+                    _react2.default.createElement(
+                        "h3",
+                        null,
+                        "\u041F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u043E \u043D\u0430 \u044E\u0442\u0443\u0431\u0435"
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "popular-youtube" },
+                        youTubePopular
+                    )
+                ),
+                _react2.default.createElement(
+                    "div",
+                    { className: "pop-container col-md-6" },
+                    _react2.default.createElement(
+                        "h3",
+                        null,
+                        "\u041B\u0438\u0434\u0435\u0440\u044B \u0442\u0440\u0435\u043D\u0434\u043E\u0432"
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "google-trends" },
+                        trends
+                    )
+                )
+            );
+        }
+    }]);
+
+    return PopularBox;
+}(_react2.default.Component);
+
+exports.default = PopularBox;
 
 /***/ }),
 
@@ -35262,6 +35592,18 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _MetersBox = __webpack_require__(/*! ./MetersBox */ "./public/javascripts/components/MetersBox.js");
+
+var _MetersBox2 = _interopRequireDefault(_MetersBox);
+
+var _PopularBox = __webpack_require__(/*! ./PopularBox */ "./public/javascripts/components/PopularBox.js");
+
+var _PopularBox2 = _interopRequireDefault(_PopularBox);
+
+var _AutoBox = __webpack_require__(/*! ./AutoBox */ "./public/javascripts/components/AutoBox.js");
+
+var _AutoBox2 = _interopRequireDefault(_AutoBox);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -35286,6 +35628,13 @@ var TagFinder = function (_React$Component) {
             this.props.onFindClick(this.props.tagFinder.findText);
         }
     }, {
+        key: "findKeyPressed",
+        value: function findKeyPressed(e) {
+            if (e.which === 13) {
+                this.props.onFindClick(this.props.tagFinder.findText);
+            }
+        }
+    }, {
         key: "textChanged",
         value: function textChanged(e) {
             var text = e.target.value;
@@ -35302,14 +35651,17 @@ var TagFinder = function (_React$Component) {
                 popular = _props$tagFinder.popular,
                 autoSugest = _props$tagFinder.autoSugest;
 
+            var isVisible = this.props.isVisible;
+
             var visibleStyle = { display: "block" };
             var invisibleStyle = { display: "none" };
+
+            var tagFinderStyle = isVisible ? visibleStyle : invisibleStyle;
 
             var searchImgVisibility = isFired ? invisibleStyle : visibleStyle;
             var resultsVisibility = isFired ? visibleStyle : invisibleStyle;
 
             var loadBoxStyle = isFetchingData ? visibleStyle : invisibleStyle;
-            var meterBoxStyle = isFetchingData ? invisibleStyle : visibleStyle;
 
             var yandexAuto = autoSugest.yandex.map(function (element, i) {
                 return _react2.default.createElement(
@@ -35333,16 +35685,47 @@ var TagFinder = function (_React$Component) {
                 );
             });
 
+            var trends = popular.trends.map(function (element, i) {
+                return _react2.default.createElement(
+                    "div",
+                    { key: i, className: "element" },
+                    _react2.default.createElement(
+                        "div",
+                        { className: "popular-count" },
+                        element.score,
+                        "%"
+                    ),
+                    _react2.default.createElement(
+                        "span",
+                        null,
+                        element.text
+                    )
+                );
+            });
+
+            var youTubePopular = popular.youtube.map(function (element, i) {
+                return _react2.default.createElement(
+                    "div",
+                    { key: i, className: "element" },
+                    _react2.default.createElement("img", { className: "diamond-rating", src: "/images/" + "d" + element.score + ".png" }),
+                    _react2.default.createElement(
+                        "span",
+                        { className: "popular-text" },
+                        element.text
+                    )
+                );
+            });
+
             return _react2.default.createElement(
                 "div",
-                null,
+                { style: tagFinderStyle },
                 _react2.default.createElement(
                     "div",
                     { className: "search-section" },
                     _react2.default.createElement(
                         "div",
                         { className: "search-control" },
-                        _react2.default.createElement("input", { className: "te-tag-input", value: findText, placeholder: "\u041F\u043E\u0438\u0441\u043A \u0442\u0435\u0433\u043E\u0432", onChange: this.textChanged.bind(this) }),
+                        _react2.default.createElement("input", { className: "te-tag-input", value: findText, placeholder: "\u041F\u043E\u0438\u0441\u043A \u0442\u0435\u0433\u043E\u0432", onKeyPress: this.findKeyPressed.bind(this), onChange: this.textChanged.bind(this) }),
                         _react2.default.createElement("a", { href: "#", className: "te-find btn btn-sm btn-outline-secondary", onClick: this.findBtnClick.bind(this) })
                     )
                 ),
@@ -35362,7 +35745,7 @@ var TagFinder = function (_React$Component) {
                     { className: "results", style: resultsVisibility },
                     _react2.default.createElement(
                         "div",
-                        { className: "row load-gif-container box", style: loadBoxStyle },
+                        { className: "box", style: loadBoxStyle },
                         _react2.default.createElement(
                             "div",
                             { className: "col-md-12 meter" },
@@ -35374,127 +35757,9 @@ var TagFinder = function (_React$Component) {
                             )
                         )
                     ),
-                    _react2.default.createElement(
-                        "div",
-                        { className: "meters-container box", style: meterBoxStyle },
-                        _react2.default.createElement(
-                            "div",
-                            { className: "row speedometer-section" },
-                            _react2.default.createElement(
-                                "div",
-                                { className: "col-md-6 meter search-value" },
-                                _react2.default.createElement(
-                                    "h3",
-                                    null,
-                                    "\u041E\u0431\u044A\u0435\u043C \u043F\u043E\u0438\u0441\u043A\u0430"
-                                ),
-                                _react2.default.createElement("img", { className: "sv-img-meter", src: "/images/sm_md.png" })
-                            ),
-                            _react2.default.createElement(
-                                "div",
-                                { className: "col-md-6 meter search-count" },
-                                _react2.default.createElement(
-                                    "h3",
-                                    null,
-                                    "\u041A\u043E\u043D\u043A\u0443\u0440\u0435\u043D\u0446\u0438\u044F"
-                                ),
-                                _react2.default.createElement("img", { className: "videoc-img-meter", src: "/images/sm_md.png" })
-                            )
-                        ),
-                        _react2.default.createElement(
-                            "div",
-                            { className: "row rating-section" },
-                            _react2.default.createElement(
-                                "div",
-                                { className: "col-md-12" },
-                                _react2.default.createElement(
-                                    "h3",
-                                    null,
-                                    "\u0420\u0435\u0439\u0442\u0438\u043D\u0433 \u0442\u0435\u0433\u0430"
-                                ),
-                                _react2.default.createElement(
-                                    "div",
-                                    { className: "row" },
-                                    _react2.default.createElement(
-                                        "div",
-                                        { className: "col-md-4" },
-                                        _react2.default.createElement(
-                                            "div",
-                                            { className: "meter-count" },
-                                            tagRating.score
-                                        )
-                                    ),
-                                    _react2.default.createElement(
-                                        "div",
-                                        { className: "col-md-8" },
-                                        _react2.default.createElement(
-                                            "p",
-                                            { className: "points-exp" },
-                                            tagRating.text
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    ),
-                    _react2.default.createElement(
-                        "div",
-                        { className: "row box" },
-                        _react2.default.createElement(
-                            "div",
-                            { className: "pop-container col-md-6" },
-                            _react2.default.createElement(
-                                "h3",
-                                null,
-                                "\u041F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u043E \u043D\u0430 \u044E\u0442\u0443\u0431\u0435"
-                            ),
-                            _react2.default.createElement("div", { className: "popular-youtube" })
-                        ),
-                        _react2.default.createElement(
-                            "div",
-                            { className: "pop-container col-md-6" },
-                            _react2.default.createElement(
-                                "h3",
-                                null,
-                                "\u041B\u0438\u0434\u0435\u0440\u044B \u0442\u0440\u0435\u043D\u0434\u043E\u0432"
-                            ),
-                            _react2.default.createElement("div", { className: "google-trends" })
-                        )
-                    ),
-                    _react2.default.createElement(
-                        "div",
-                        { className: "row box" },
-                        _react2.default.createElement(
-                            "div",
-                            { className: "col-lg-4 auto-section" },
-                            _react2.default.createElement("img", { src: "/images/google.png" }),
-                            _react2.default.createElement(
-                                "ul",
-                                { className: "google-auto auto-list" },
-                                googleAuto
-                            )
-                        ),
-                        _react2.default.createElement(
-                            "div",
-                            { className: "col-lg-4 auto-section" },
-                            _react2.default.createElement("img", { src: "/images/youtube.png" }),
-                            _react2.default.createElement(
-                                "ul",
-                                { className: "youtube-auto auto-list" },
-                                youtubeAuto
-                            )
-                        ),
-                        _react2.default.createElement(
-                            "div",
-                            { className: "col-lg-4 auto-section" },
-                            _react2.default.createElement("img", { src: "/images/yandex.png" }),
-                            _react2.default.createElement(
-                                "ul",
-                                { className: "yandex-auto auto-list" },
-                                yandexAuto
-                            )
-                        )
-                    )
+                    _react2.default.createElement(_MetersBox2.default, { isFetchingData: isFetchingData, tagRating: tagRating }),
+                    _react2.default.createElement(_PopularBox2.default, { youTubePopular: youTubePopular, trends: trends }),
+                    _react2.default.createElement(_AutoBox2.default, { yandexAuto: yandexAuto, youtubeAuto: youtubeAuto, googleAuto: googleAuto })
                 )
             );
         }
@@ -35529,7 +35794,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 
-var _actions = __webpack_require__(/*! ../actions */ "./public/javascripts/actions.js");
+var _actions = __webpack_require__(/*! ../actions/actions */ "./public/javascripts/actions/actions.js");
 
 var _ControlPanel = __webpack_require__(/*! ./ControlPanel */ "./public/javascripts/components/ControlPanel.js");
 
@@ -35600,13 +35865,16 @@ var YouTagsTool = function (_React$Component) {
         value: function render() {
             var _this2 = this;
 
+            var _props = this.props,
+                steps = _props.steps,
+                tagFinder = _props.tagFinder;
+
             var visibleStyle = { display: "block" };
             var invisibleStyle = { display: "none" };
 
-            var checkListStyle = this.props.checkListActive ? visibleStyle : invisibleStyle;
-            var tagsFinderStyle = this.props.checkListActive ? invisibleStyle : visibleStyle;
+            var checkListStyle = steps.checkListActive ? visibleStyle : invisibleStyle;
 
-            var allSteps = this.props.checkList.map(function (step, i) {
+            var allSteps = steps.checkList.map(function (step, i) {
                 return _react2.default.createElement(_Step2.default, {
                     key: i,
                     stepNum: i,
@@ -35620,21 +35888,21 @@ var YouTagsTool = function (_React$Component) {
                 "div",
                 { className: "te-explorer" },
                 _react2.default.createElement(_ControlPanel2.default, {
-                    activeCheckListTab: this.props.checkListActive,
+                    activeCheckListTab: steps.checkListActive,
                     onCheckListClick: this.checkListOpen.bind(this),
                     onRestartStepsClick: this.restartSteps.bind(this),
                     onTagExplorerClick: this.tagExplorerOpen.bind(this)
                 }),
                 _react2.default.createElement(
                     "div",
-                    { id: "check-list-row", style: checkListStyle, className: "steps-container" },
+                    { style: checkListStyle, className: "steps-container" },
                     allSteps
                 ),
-                _react2.default.createElement(
-                    "div",
-                    { id: "tag-row", style: tagsFinderStyle },
-                    _react2.default.createElement(_TagFinder2.default, { tagFinder: this.props.tagFinder, onFindClick: this.getTagStatistics.bind(this), onTextChange: this.changeTagText.bind(this) })
-                )
+                _react2.default.createElement(_TagFinder2.default, { isVisible: !steps.checkListActive,
+                    tagFinder: tagFinder,
+                    onFindClick: this.getTagStatistics.bind(this),
+                    onTextChange: this.changeTagText.bind(this)
+                })
             );
         }
     }]);
@@ -35669,7 +35937,10 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 };
 
 var mapStateToProps = function mapStateToProps(state) {
-    return state;
+    return {
+        steps: state.steps,
+        tagFinder: state.tagFinder
+    };
 };
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(YouTagsTool);
@@ -35767,10 +36038,10 @@ function overlayOk() {
 
 /***/ }),
 
-/***/ "./public/javascripts/reducers.js":
-/*!****************************************!*\
-  !*** ./public/javascripts/reducers.js ***!
-  \****************************************/
+/***/ "./public/javascripts/reducers/initialState.js":
+/*!*****************************************************!*\
+  !*** ./public/javascripts/reducers/initialState.js ***!
+  \*****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -35780,27 +36051,109 @@ function overlayOk() {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+var tagFinderInitState = exports.tagFinderInitState = {
+    isFired: false,
+    isFetchingData: false,
+    requesting: false,
+    findText: "",
+    tagRating: {
+        score: 0,
+        text: "",
+        videoQuality: 1,
+        searchValueQuality: 1
+    },
+    popular: {
+        youtube: [],
+        trends: []
+    },
+    autoSugest: {
+        google: [],
+        yandex: [],
+        youtube: []
+    }
+};
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; //var dotProp = require('dot-prop-immutable');
+var stepsInitState = exports.stepsInitState = {
+    checkListActive: true,
+    checkList: [{
+        executed: false,
+        opened: false,
+        name: "1. Переименовываем видео файл",
+        guidance: "Название файла - это первый шаг к оптимизации видео. Оно участвует в поисковой выдаче YouTube, Google, Yandex.",
+        advices: ["По названию файла должно быть понятна тема видео, например, «обзор на мотоцикл.mov» или «монтаж кровли.mp4»", "Не оставляйте название файла стандартным, таким как: MVI_0441.MOV", "Правильное название файла увеличивает кол-во просмотров за счет выдачи в поисковых системах."]
+    }, {
+        executed: false,
+        opened: false,
+        name: "2. Подбираем поисковые теги",
+        guidance: "Теги — это метки по которым зритель может найти ваше видео в поисковой выдаче или в рекомендованных и похожих видео. Поэтому мы начинаем оптимизацию наших видео именно с тегов, а не с названия и описания.",
+        advices: ["Наша задача найти поисковые запросы с максимальным объемом поиска и минимальным количеством конкуренции.", "Если вы делаете обзор чего-либо попробуйте проверить тег «обзор на сноуборд», «сноуборд обзор» вместо «обзор сноуборда».", "Обратите внимание на предложенное в \"Поиске тегов\". Среди них могут быть теги с высокими поисковыми показателями.", "Если ваше видео отвечает на вопросы «как?», «что?», «где?», «когда?» - используйте эти слова в поисковых тегах."]
+    }, {
+        executed: false,
+        opened: false,
+        name: "3. Подбираем тематические теги",
+        guidance: "Данная группа тегов нужна для попадания нашего видео в список рекомендованного к видео уже набравшим популярность. Данные теги могут иметь плохой поисковой рейтинг.",
+        advices: ["Рассмотрите предложенные теги в списке «Популярно на ютубе» и «Популярные тренды».", "В данный список не пишите теги с опечатками и на транслите."]
+    }, {
+        executed: false,
+        opened: false,
+        name: "4. Подбираем брендирующие теги",
+        guidance: "Используя уникальные, повторяющиеся теги под всеми нашими видео мы формируем список рекомендаций состоящий только из наших контента.",
+        advices: ["Придумайте уникальные для своего канала теги. Например: «СамыйЛучшийЗаводВМире» «СЛЗВМобзор»", "Показатели данной группы тегов не важны.", "Не используйте чужие брендирующие теги такие как: «Трансформатор», «Дудь», «Славный обзор»."]
+    }, {
+        executed: false,
+        opened: false,
+        name: "5. Придумываем название для видео",
+        guidance: "Название должно вызывать у человека желание кликнуть на видео.",
+        advices: ["Первая часть названия - популярный тематический тег.", "Вторая часть названия - поисковой запрос с наибольшим рейтингом.", "Третья часть названия - (по желанию) 2-й поисковой запрос.", "Название должно полностью соответствовать содержанию видео. Не вводите в заблуждение своих зрителей иначе они покинут ваше видео.", "Если у вас серийный контент не забудьте включить номер эпизода в название."]
+    }, {
+        executed: false,
+        opened: false,
+        name: "6. Составляем описание к видео",
+        guidance: "Задача на этом этапе продублировать теги в описании, чтобы придать видео наибольший ранжирующий фактор.",
+        advices: ["Описание должно быть логически выстроенным. Описание такое как: «купить дом, купить дом в Москве, как купить дом в Москве дешево» нарушают правила сообщества YouTube и могут привести к блокировке канала.", "В тексте необходимо описать происходящее на видео с повторением поисковых, тематических и брендирующих тегов.", "В конце описания оставьте свои контакты и ссылки на другие ваши видео по смежной тематике."]
+    }, {
+        executed: false,
+        opened: false,
+        name: "7. Создаем превью",
+        guidance: "Превью - картинка-обложка видео по которой человек должен понять, о чем пойдет речь в видео. Уделите особое внимание созданию превью, это как раз тот случай, когда о книге будут судить по обложке.",
+        advices: ["Превью должно быть с минимальным разрешением 1280х720.", "50% просмотров идет с мобильных устройств. Превью должно быть читаемо даже с небольших экранов смартфонов.", "Постарайтесь придерживаться определенного стиля на всех своих превью.", "Показатель кликабельности (CTR) картинки можно посмотреть в творческой студии.", "Поэкспериментируйте с текстами на картинке и эмоциями человека на ней. Используйте яркие цвета, различных вариантов выделения отдельных объектов."]
+    }, {
+        executed: false,
+        opened: false,
+        name: "8. Настраиваем заставки и подсказки",
+        guidance: "Конечные заставки и подсказки - это ссылки в самом видео, которые ведут на другие ваши видео, плейлисты, сайты.",
+        advices: ["10% трафика канала может состоять из переходов по конечным заставкам и подсказкам.", "Рекомендуем использовать в конечных заставках шаблон: 2 видео + 1 подписка на канал.", "В качестве цели конечной заставки используйте «новое» и «рекомендуемое» видео."]
+    }, {
+        executed: false,
+        opened: false,
+        name: "9. Создадим плейлисты",
+        guidance: "Плейлист это список видео, которые воспроизводятся последовательно, в том порядке какой вы сами выберете. Плейлисты должны быть сегментированы по тематике видео.",
+        advices: ["Плейлисты участвуют в поисковой выдаче YouTube и имеют больший вес при ранжировании.", "Если загружаемое видео не подходит по смыслу ни в один ваших плейлист создайте новый."]
+    }, {
+        executed: false,
+        opened: false,
+        name: "10. Ищем трафик на видео.",
+        guidance: "Последний шаг оптимизации видео - сбор аналитики с максимальной объемной фокус группы.",
+        advices: ["Зарепостите свое видео в социальные сети или купите платную рекламу.", "Попробуйте создать треды в тематических форумах или на бордах.", "У вас есть 2 дня после публикации видео для первоначального сбора аналитики основных параметров органического продвижения."]
+    }]
+};
 
-
-var _dotPropImmutable = __webpack_require__(/*! dot-prop-immutable */ "./node_modules/dot-prop-immutable/index.js");
-
-var _dotPropImmutable2 = _interopRequireDefault(_dotPropImmutable);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var initState = {
+var initState = exports.initState = {
     checkListActive: true,
     tagFinder: {
         isFired: false,
         isFetchingData: false,
         requesting: false,
         findText: "",
-        tagRating: { score: 0, text: "" },
+        tagRating: {
+            score: 0,
+            text: "",
+            videoQuality: 1,
+            searchValueQuality: 1
+        },
         popular: {
-            youPopular: [],
-            trendsPopular: []
+            youtube: [],
+            trends: []
         },
         autoSugest: {
             google: [],
@@ -35871,25 +36224,96 @@ var initState = {
     }]
 };
 
-function reducer() {
-    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initState;
+/***/ }),
+
+/***/ "./public/javascripts/reducers/rootReducer.js":
+/*!****************************************************!*\
+  !*** ./public/javascripts/reducers/rootReducer.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.rootReducer = undefined;
+
+var _redux = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+
+var _stepsReducer = __webpack_require__(/*! ./stepsReducer */ "./public/javascripts/reducers/stepsReducer.js");
+
+var _stepsReducer2 = _interopRequireDefault(_stepsReducer);
+
+var _tagFinderReducer = __webpack_require__(/*! ./tagFinderReducer */ "./public/javascripts/reducers/tagFinderReducer.js");
+
+var _tagFinderReducer2 = _interopRequireDefault(_tagFinderReducer);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var rootReducer = exports.rootReducer = (0, _redux.combineReducers)({
+    steps: _stepsReducer2.default,
+    tagFinder: _tagFinderReducer2.default
+});
+
+/***/ }),
+
+/***/ "./public/javascripts/reducers/stepsReducer.js":
+/*!*****************************************************!*\
+  !*** ./public/javascripts/reducers/stepsReducer.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _dotPropImmutable = __webpack_require__(/*! dot-prop-immutable */ "./node_modules/dot-prop-immutable/index.js");
+
+var _dotPropImmutable2 = _interopRequireDefault(_dotPropImmutable);
+
+var _initialState = __webpack_require__(/*! ./initialState */ "./public/javascripts/reducers/initialState.js");
+
+var _actionTypes = __webpack_require__(/*! ../actions/actionTypes */ "./public/javascripts/actions/actionTypes.js");
+
+var types = _interopRequireWildcard(_actionTypes);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function stepsReducer() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _initialState.stepsInitState;
     var action = arguments[1];
 
 
     switch (action.type) {
-        case "ToCheckList":
+
+        case types.TO_CHECK_LIST:
             return _extends({}, state, { checkListActive: true });
-        case "ToTagFinder":
+
+        case types.TO_TAG_FINDER:
             return _extends({}, state, { checkListActive: false });
-        case "ExecuteStep":
+
+        case types.EXECUTE_STEP:
             {
                 return _dotPropImmutable2.default.set(state, "checkList." + action.payload.stepNum + ".executed", action.payload.executed);
             }
-        case "ToggleStep":
+
+        case types.TOGGLE_STEP:
             {
                 return _dotPropImmutable2.default.set(state, "checkList." + action.payload.stepNum + ".opened", action.payload.opened);
             }
-        case "RestartSteps":
+
+        case types.RESTART_STEPS:
             {
                 var newState = _extends({}, state);
                 for (var i = 0; i < state.checkList.length; i++) {
@@ -35897,31 +36321,90 @@ function reducer() {
                 }
                 return newState;
             }
-        case "ChangeFindText":
+
+        default:
+            return state;
+    }
+}
+
+exports.default = stepsReducer;
+
+/***/ }),
+
+/***/ "./public/javascripts/reducers/tagFinderReducer.js":
+/*!*********************************************************!*\
+  !*** ./public/javascripts/reducers/tagFinderReducer.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _dotPropImmutable = __webpack_require__(/*! dot-prop-immutable */ "./node_modules/dot-prop-immutable/index.js");
+
+var _dotPropImmutable2 = _interopRequireDefault(_dotPropImmutable);
+
+var _initialState = __webpack_require__(/*! ./initialState */ "./public/javascripts/reducers/initialState.js");
+
+var _actionTypes = __webpack_require__(/*! ../actions/actionTypes */ "./public/javascripts/actions/actionTypes.js");
+
+var types = _interopRequireWildcard(_actionTypes);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function tagFinderReducer() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _initialState.tagFinderInitState;
+    var action = arguments[1];
+
+
+    switch (action.type) {
+
+        case types.CHANGE_FIND_TEXT:
             {
-                return _dotPropImmutable2.default.set(state, "tagFinder.findText", action.payload);
+                return _dotPropImmutable2.default.set(state, "findText", action.payload);
             }
-        case "TagStatisticsRequest":
+
+        case types.TAG_STATISTICS_REQUEST:
             {
-                var _newState = _dotPropImmutable2.default.set(state, "tagFinder.isFired", true);
-                return _dotPropImmutable2.default.set(_newState, "tagFinder.isFetchingData", true);
+                var newState = _dotPropImmutable2.default.set(state, "isFired", true);
+                return _dotPropImmutable2.default.set(newState, "isFetchingData", true);
             }
-        case "TagStatisticsScore":
+
+        case types.CHANGE_TAG_SCORE:
             {
-                var _newState2 = _dotPropImmutable2.default.set(state, "tagFinder.isFetchingData", false);
-                return _dotPropImmutable2.default.set(_newState2, "tagFinder.tagRating", action.payload);
+                var _newState = _dotPropImmutable2.default.set(state, "isFetchingData", false);
+                return _dotPropImmutable2.default.set(_newState, "tagRating", action.payload);
             }
-        case "ChangeYandexAuto":
+
+        case types.CHANGE_YANDEX_AUTO:
             {
-                return _dotPropImmutable2.default.set(state, "tagFinder.autoSugest.yandex", action.payload);
+                return _dotPropImmutable2.default.set(state, "autoSugest.yandex", action.payload);
             }
-        case "ChangeGoogleAuto":
+
+        case types.CHANGE_GOOGLE_AUTO:
             {
-                return _dotPropImmutable2.default.set(state, "tagFinder.autoSugest.google", action.payload);
+                return _dotPropImmutable2.default.set(state, "autoSugest.google", action.payload);
             }
-        case "ChangeYoutubeAuto":
+        case types.CHANGE_YOUTUBE_AUTO:
             {
-                return _dotPropImmutable2.default.set(state, "tagFinder.autoSugest.youtube", action.payload);
+                return _dotPropImmutable2.default.set(state, "autoSugest.youtube", action.payload);
+            }
+
+        case types.CHANGE_TRENDS:
+            {
+                return _dotPropImmutable2.default.set(state, "popular.trends", action.payload);
+            }
+
+        case types.CHANGE_YOUTUBE_POPULAR:
+            {
+                return _dotPropImmutable2.default.set(state, "popular.youtube", action.payload);
             }
 
         default:
@@ -35929,7 +36412,7 @@ function reducer() {
     }
 }
 
-exports.default = reducer;
+exports.default = tagFinderReducer;
 
 /***/ }),
 
@@ -35986,6 +36469,148 @@ exports.default = AutoService;
 
 /***/ }),
 
+/***/ "./public/javascripts/services/StatsService.js":
+/*!*****************************************************!*\
+  !*** ./public/javascripts/services/StatsService.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _jquery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var StatsService = function () {
+
+    var getPopularAndScore = function getPopularAndScore(text, popularCallBack, scoreCallBack) {
+        _jquery2.default.getJSON('https://www.googleapis.com/youtube/v3/search?key=AIzaSyD8875J05trC_O6hssu5gDTRaM1ImKZEKU&maxResults=10&relevanceLanguage=ru&regionCode=ru&q=' + text + '&part=snippet&type=video', function (data) {
+
+            var allTags = [];
+            var allIds = [];
+            for (var i in data.items) {
+                allIds.push(data.items[i].id.videoId);
+            }
+
+            for (var _i in allIds) {
+                _jquery2.default.ajax({
+                    async: false,
+                    url: 'https://www.googleapis.com/youtube/v3/videos?key=AIzaSyD8875J05trC_O6hssu5gDTRaM1ImKZEKU&fields=items(snippet(title,description,tags))&part=snippet&id=' + allIds[_i],
+                    dataType: "json",
+                    success: function success(data) {
+                        for (var _i2 in data.items[0].snippet.tags) {
+                            allTags.push(data.items[0].snippet.tags[_i2]);
+                        }
+                    }
+                });
+            }
+            var map = new Map();
+            allTags.forEach(function (a) {
+                return map.set(a, (map.get(a) || 0) + 1);
+            });
+
+            var uniqueKeys = allTags.filter(function (a) {
+                return map.get(a) === 1;
+            });
+            for (var _i3 in uniqueKeys) {
+                map.delete(uniqueKeys[_i3]);
+            }
+
+            var notUniqueTags = [];
+            map.forEach(function (val, key) {
+                return notUniqueTags.push({ count: val, value: key });
+            });
+
+            for (var _i4 = 0; _i4 < notUniqueTags.length - 1; _i4++) {
+                for (var j = 0; j < notUniqueTags.length - 1; j++) {
+                    if (notUniqueTags[j].count < notUniqueTags[j + 1].count) {
+                        var buf = { count: notUniqueTags[j + 1].count, value: notUniqueTags[j + 1].value };
+                        notUniqueTags[j + 1].count = notUniqueTags[j].count;
+                        notUniqueTags[j + 1].value = notUniqueTags[j].value;
+
+                        notUniqueTags[j].count = buf.count;
+                        notUniqueTags[j].value = buf.value;
+                    }
+                }
+            }
+            var topFiveTags = [];
+            for (var _i5 = 0; _i5 < 5; _i5++) {
+                if (notUniqueTags.length <= _i5) break;
+                topFiveTags.push(notUniqueTags[_i5]);
+            }
+
+            var youPopular = topFiveTags.map(function (tag) {
+                return { score: tag.count, text: tag.value };
+            });
+            var totalResults = data.pageInfo.totalResults;
+
+            popularCallBack(youPopular);
+
+            _jquery2.default.getJSON('/api/tagscore?keyword=' + text + "&count=" + totalResults, function (data) {
+                scoreCallBack({ score: data.Points, text: data.Explanation, videoQuality: data.VideoCountQuality, searchValueQuality: data.SVQuality });
+            });
+        });
+    };
+    return {
+        getPopularAndScore: getPopularAndScore
+    };
+}();
+
+exports.default = StatsService;
+
+/***/ }),
+
+/***/ "./public/javascripts/services/TrendsService.js":
+/*!******************************************************!*\
+  !*** ./public/javascripts/services/TrendsService.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _jquery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var TrendsService = function () {
+
+    var getTrends = function getTrends(text, callback) {
+        _jquery2.default.getJSON('/api/trends?keyword=' + text, function (data) {
+
+            var trends = [];
+            for (var i = 0; i < 5; i++) {
+                if (data.length <= i) break;
+                trends.push({ score: data[i].value, text: data[i].query });
+            }
+
+            callback(trends);
+        });
+    };
+    return {
+        getTrends: getTrends
+    };
+}();
+
+exports.default = TrendsService;
+
+/***/ }),
+
 /***/ "./public/javascripts/store.js":
 /*!*************************************!*\
   !*** ./public/javascripts/store.js ***!
@@ -36002,9 +36627,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _redux = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
 
-var _reducers = __webpack_require__(/*! ./reducers */ "./public/javascripts/reducers.js");
-
-var _reducers2 = _interopRequireDefault(_reducers);
+var _rootReducer = __webpack_require__(/*! ./reducers/rootReducer */ "./public/javascripts/reducers/rootReducer.js");
 
 var _reduxThunk = __webpack_require__(/*! redux-thunk */ "./node_modules/redux-thunk/es/index.js");
 
@@ -36012,7 +36635,7 @@ var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var store = (0, _redux.createStore)(_reducers2.default, (0, _redux.applyMiddleware)(_reduxThunk2.default)); //, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+var store = (0, _redux.createStore)(_rootReducer.rootReducer, (0, _redux.applyMiddleware)(_reduxThunk2.default)); //, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 exports.default = store;
 
@@ -36151,7 +36774,7 @@ Window.overlayOk = _overlay.overlayOk;
     _react2.default.createElement(_YouTagsTool2.default, null)
 ), document.getElementById("root"));
 
-//registerServiceWorker();
+(0, _registerServiceWorker2.default)();
 
 /***/ })
 

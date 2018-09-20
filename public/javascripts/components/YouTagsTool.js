@@ -1,6 +1,6 @@
 import React from "react"
 import {connect} from "react-redux"
-import {ToCheckListAction, ToTagFinderAction, ExecuteStep, ToggleStep, RestartSteps, RequestTagStatistics, ChangeFindText} from "../actions"
+import {ToCheckListAction, ToTagFinderAction, ExecuteStep, ToggleStep, RestartSteps, RequestTagStatistics, ChangeFindText} from "../actions/actions"
 import ControlPanel from "./ControlPanel";
 import Step from "./Step";
 import TagFinder from "./TagFinder";
@@ -39,13 +39,13 @@ class YouTagsTool extends React.Component {
     }
 
     render() {
+        const { steps, tagFinder } = this.props;
         let visibleStyle = {display: "block"};
         let invisibleStyle = {display: "none"};
 
-        let checkListStyle = this.props.checkListActive ? visibleStyle : invisibleStyle;
-        let tagsFinderStyle = this.props.checkListActive ? invisibleStyle : visibleStyle;
+        let checkListStyle = steps.checkListActive ? visibleStyle : invisibleStyle;
 
-        let allSteps = this.props.checkList.map((step, i)=>
+        let allSteps = steps.checkList.map((step, i)=>
             <Step
                 key={i}
                 stepNum={i}
@@ -54,23 +54,22 @@ class YouTagsTool extends React.Component {
                 stepExecution = {this.stepExecution.bind(this)}
             />);
 
-
         return (
             <div className="te-explorer">
-
                 <ControlPanel
-                    activeCheckListTab = {this.props.checkListActive}
+                    activeCheckListTab = {steps.checkListActive}
                     onCheckListClick ={this.checkListOpen.bind(this)}
                     onRestartStepsClick = {this.restartSteps.bind(this)}
                     onTagExplorerClick = {this.tagExplorerOpen.bind(this)}
                 />
 
-                <div id="check-list-row" style={checkListStyle} className="steps-container">{allSteps}</div>
+                <div style={checkListStyle} className="steps-container">{allSteps}</div>
 
-                <div id="tag-row" style={tagsFinderStyle}>
-                    <TagFinder tagFinder={this.props.tagFinder} onFindClick = {this.getTagStatistics.bind(this)} onTextChange={this.changeTagText.bind(this)}/>
-                </div>
-
+                <TagFinder isVisible={!steps.checkListActive}
+                           tagFinder={tagFinder}
+                           onFindClick = {this.getTagStatistics.bind(this)}
+                           onTextChange={this.changeTagText.bind(this)}
+                />
             </div>
         );
     }
@@ -89,7 +88,10 @@ const mapDispatchToProps = (dispatch) =>{
 };
 
 const mapStateToProps = (state) => {
-    return state;
+    return {
+        steps: state.steps,
+        tagFinder: state.tagFinder,
+    }
 };
 
 export default connect(
