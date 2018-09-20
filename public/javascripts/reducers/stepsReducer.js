@@ -5,7 +5,6 @@ import * as types from "../actions/actionTypes"
 function stepsReducer(state = stepsInitState, action){
 
     switch(action.type){
-
         case types.TO_CHECK_LIST:
             return {...state,checkListActive: true};
 
@@ -19,7 +18,7 @@ function stepsReducer(state = stepsInitState, action){
         case types.TOGGLE_STEP:{
             return dotProp.set(state, `checkList.${action.payload.stepNum}.opened`, action.payload.opened);
         }
-
+        //switch all steps executed state to false
         case types.RESTART_STEPS:{
             let newState = {...state};
             for(let i=0;i<state.checkList.length;i++) {
@@ -27,7 +26,6 @@ function stepsReducer(state = stepsInitState, action){
             }
             return newState;
         }
-
         default:
             return state;
     }

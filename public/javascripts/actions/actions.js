@@ -88,10 +88,13 @@ export function ChangeYoutubePopular(data){
 export function RequestTagStatistics(tag) {
     return (dispatch) => {
 
+        //showing load icon
         dispatch({
             type: types.TAG_STATISTICS_REQUEST
         });
 
+        //downloading score and youtube popular tags together
+        //cause tag's score depends on videocount from popular tags
         StatsService.getPopularAndScore(tag,
             (data)=>{
                 dispatch(ChangeYoutubePopular(data));
@@ -101,6 +104,7 @@ export function RequestTagStatistics(tag) {
             }
         );
 
+        //then doing trends and autocomplete stuff
         TrendsService.getTrends(tag,(data)=>{
             dispatch(ChangeTrends(data));
         });

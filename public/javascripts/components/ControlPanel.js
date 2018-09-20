@@ -24,6 +24,8 @@ export default class ControlPanel extends React.Component {
     render() {
         let checkTabClass = this.props.activeCheckListTab ? "section-link active": "section-link";
         let tagTabClass = this.props.activeCheckListTab ? "section-link": "section-link active";
+
+        //notice that menu button empties all steps execution state
         return (
             <div className="control-panel">
                 <a href="#" className="btn menu-btn" onClick={this.menuBtnClick.bind(this)}/>

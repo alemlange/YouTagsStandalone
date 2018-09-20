@@ -1,4 +1,5 @@
 import React from "react"
+import PropTypes from 'prop-types';
 
 export default class AutoBox extends React.Component {
     constructor(props) {
@@ -6,7 +7,11 @@ export default class AutoBox extends React.Component {
     }
 
     render() {
-        const { googleAuto, youtubeAuto, yandexAuto} = this.props;
+        const { yandex, youtube, google} = this.props;
+
+        let yandexAuto = yandex.map((element, i)=>{return <li key={i}>{element}</li>});
+        let youtubeAuto = youtube.map((element, i)=>{return <li key={i}>{element}</li>});
+        let googleAuto = google.map((element, i)=>{ return <li key={i}>{element}</li>});
 
         return (
             <div className="box">
@@ -28,3 +33,9 @@ export default class AutoBox extends React.Component {
         );
     }
 }
+
+AutoBox.propTypes = {
+    yandex: PropTypes.array.isRequired,
+    youtube: PropTypes.array.isRequired,
+    google: PropTypes.array.isRequired
+};

@@ -35028,16 +35028,20 @@ function ChangeYoutubePopular(data) {
 function RequestTagStatistics(tag) {
     return function (dispatch) {
 
+        //showing load icon
         dispatch({
             type: types.TAG_STATISTICS_REQUEST
         });
 
+        //downloading score and youtube popular tags together
+        //cause tag's score depends on videocount from popular tags
         _StatsService2.default.getPopularAndScore(tag, function (data) {
             dispatch(ChangeYoutubePopular(data));
         }, function (data) {
             dispatch(ChangeTagScore(data));
         });
 
+        //then doing trends and autocomplete stuff
         _TrendsService2.default.getTrends(tag, function (data) {
             dispatch(ChangeTrends(data));
         });
@@ -35078,6 +35082,10 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _propTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -35099,10 +35107,32 @@ var AutoBox = function (_React$Component) {
         key: "render",
         value: function render() {
             var _props = this.props,
-                googleAuto = _props.googleAuto,
-                youtubeAuto = _props.youtubeAuto,
-                yandexAuto = _props.yandexAuto;
+                yandex = _props.yandex,
+                youtube = _props.youtube,
+                google = _props.google;
 
+
+            var yandexAuto = yandex.map(function (element, i) {
+                return _react2.default.createElement(
+                    "li",
+                    { key: i },
+                    element
+                );
+            });
+            var youtubeAuto = youtube.map(function (element, i) {
+                return _react2.default.createElement(
+                    "li",
+                    { key: i },
+                    element
+                );
+            });
+            var googleAuto = google.map(function (element, i) {
+                return _react2.default.createElement(
+                    "li",
+                    { key: i },
+                    element
+                );
+            });
 
             return _react2.default.createElement(
                 "div",
@@ -35145,6 +35175,13 @@ var AutoBox = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = AutoBox;
+
+
+AutoBox.propTypes = {
+    yandex: _propTypes2.default.array.isRequired,
+    youtube: _propTypes2.default.array.isRequired,
+    google: _propTypes2.default.array.isRequired
+};
 
 /***/ }),
 
@@ -35212,6 +35249,8 @@ var ControlPanel = function (_React$Component) {
         value: function render() {
             var checkTabClass = this.props.activeCheckListTab ? "section-link active" : "section-link";
             var tagTabClass = this.props.activeCheckListTab ? "section-link" : "section-link active";
+
+            //notice that menu button empties all steps execution state
             return _react2.default.createElement(
                 "div",
                 { className: "control-panel" },
@@ -35284,7 +35323,10 @@ var MetersBox = function (_React$Component) {
         value: function render() {
             var _props = this.props,
                 isFetchingData = _props.isFetchingData,
-                tagRating = _props.tagRating;
+                score = _props.score,
+                searchValueQuality = _props.searchValueQuality,
+                videoQuality = _props.videoQuality,
+                text = _props.text;
 
 
             var visibleStyle = { display: "block" };
@@ -35292,14 +35334,15 @@ var MetersBox = function (_React$Component) {
 
             var meterBoxStyle = isFetchingData ? invisibleStyle : visibleStyle;
 
+            //choosing score color based on score
             var tagScoreStyle = { color: "#f00" };
-            if (tagRating.score >= 25 && tagRating.score < 40) {
+            if (score >= 25 && score < 40) {
                 tagScoreStyle = { color: "#ef7171" };
-            } else if (tagRating.score >= 40 && tagRating.score < 60) {
+            } else if (score >= 40 && score < 60) {
                 tagScoreStyle = { color: "#ffdc28" };
-            } else if (tagRating.score >= 60 && tagRating.score < 70) {
+            } else if (score >= 60 && score < 70) {
                 tagScoreStyle = { color: "#68f1ae" };
-            } else if (tagRating.score >= 70 && tagRating.score <= 100) {
+            } else if (score >= 70 && score <= 100) {
                 tagScoreStyle = { color: "#03a958" };
             }
 
@@ -35317,7 +35360,7 @@ var MetersBox = function (_React$Component) {
                             null,
                             "\u041E\u0431\u044A\u0435\u043C \u043F\u043E\u0438\u0441\u043A\u0430"
                         ),
-                        _react2.default.createElement("img", { src: "/images/sm_" + tagRating.searchValueQuality + ".png" })
+                        _react2.default.createElement("img", { src: "/images/sm_" + searchValueQuality + ".png" })
                     ),
                     _react2.default.createElement(
                         "div",
@@ -35327,7 +35370,7 @@ var MetersBox = function (_React$Component) {
                             null,
                             "\u041A\u043E\u043D\u043A\u0443\u0440\u0435\u043D\u0446\u0438\u044F"
                         ),
-                        _react2.default.createElement("img", { src: "/images/sm_" + tagRating.videoQuality + ".png" })
+                        _react2.default.createElement("img", { src: "/images/sm_" + videoQuality + ".png" })
                     )
                 ),
                 _react2.default.createElement(
@@ -35350,7 +35393,7 @@ var MetersBox = function (_React$Component) {
                                 _react2.default.createElement(
                                     "div",
                                     { className: "meter-count", style: tagScoreStyle },
-                                    tagRating.score
+                                    score
                                 )
                             ),
                             _react2.default.createElement(
@@ -35359,7 +35402,7 @@ var MetersBox = function (_React$Component) {
                                 _react2.default.createElement(
                                     "p",
                                     { className: "points-exp" },
-                                    tagRating.text
+                                    text
                                 )
                             )
                         )
@@ -35396,6 +35439,10 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _propTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -35414,42 +35461,73 @@ var PopularBox = function (_React$Component) {
     }
 
     _createClass(PopularBox, [{
-        key: "render",
+        key: 'render',
         value: function render() {
             var _props = this.props,
                 youTubePopular = _props.youTubePopular,
                 trends = _props.trends;
 
 
-            return _react2.default.createElement(
-                "div",
-                { className: "box" },
-                _react2.default.createElement(
-                    "div",
-                    { className: "pop-container col-md-6" },
+            var trendsList = trends.map(function (element, i) {
+                return _react2.default.createElement(
+                    'div',
+                    { key: i, className: 'element' },
                     _react2.default.createElement(
-                        "h3",
-                        null,
-                        "\u041F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u043E \u043D\u0430 \u044E\u0442\u0443\u0431\u0435"
+                        'div',
+                        { className: 'popular-count' },
+                        element.score,
+                        '%'
                     ),
                     _react2.default.createElement(
-                        "div",
-                        { className: "popular-youtube" },
-                        youTubePopular
+                        'span',
+                        null,
+                        element.text
+                    )
+                );
+            });
+
+            var youTubeList = youTubePopular.map(function (element, i) {
+                return _react2.default.createElement(
+                    'div',
+                    { key: i, className: 'element' },
+                    _react2.default.createElement('img', { className: 'diamond-rating', src: "/images/" + "d" + element.score + ".png" }),
+                    _react2.default.createElement(
+                        'span',
+                        { className: 'popular-text' },
+                        element.text
+                    )
+                );
+            });
+
+            return _react2.default.createElement(
+                'div',
+                { className: 'box' },
+                _react2.default.createElement(
+                    'div',
+                    { className: 'pop-container col-md-6' },
+                    _react2.default.createElement(
+                        'h3',
+                        null,
+                        '\u041F\u043E\u043F\u0443\u043B\u044F\u0440\u043D\u043E \u043D\u0430 \u044E\u0442\u0443\u0431\u0435'
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'popular-youtube' },
+                        youTubeList
                     )
                 ),
                 _react2.default.createElement(
-                    "div",
-                    { className: "pop-container col-md-6" },
+                    'div',
+                    { className: 'pop-container col-md-6' },
                     _react2.default.createElement(
-                        "h3",
+                        'h3',
                         null,
-                        "\u041B\u0438\u0434\u0435\u0440\u044B \u0442\u0440\u0435\u043D\u0434\u043E\u0432"
+                        '\u041B\u0438\u0434\u0435\u0440\u044B \u0442\u0440\u0435\u043D\u0434\u043E\u0432'
                     ),
                     _react2.default.createElement(
-                        "div",
-                        { className: "google-trends" },
-                        trends
+                        'div',
+                        { className: 'google-trends' },
+                        trendsList
                     )
                 )
             );
@@ -35460,6 +35538,12 @@ var PopularBox = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = PopularBox;
+
+
+PopularBox.propTypes = {
+    youTubePopular: _propTypes2.default.array.isRequired,
+    trends: _propTypes2.default.array.isRequired
+};
 
 /***/ }),
 
@@ -35663,59 +35747,6 @@ var TagFinder = function (_React$Component) {
 
             var loadBoxStyle = isFetchingData ? visibleStyle : invisibleStyle;
 
-            var yandexAuto = autoSugest.yandex.map(function (element, i) {
-                return _react2.default.createElement(
-                    "li",
-                    { key: i },
-                    element
-                );
-            });
-            var youtubeAuto = autoSugest.youtube.map(function (element, i) {
-                return _react2.default.createElement(
-                    "li",
-                    { key: i },
-                    element
-                );
-            });
-            var googleAuto = autoSugest.google.map(function (element, i) {
-                return _react2.default.createElement(
-                    "li",
-                    { key: i },
-                    element
-                );
-            });
-
-            var trends = popular.trends.map(function (element, i) {
-                return _react2.default.createElement(
-                    "div",
-                    { key: i, className: "element" },
-                    _react2.default.createElement(
-                        "div",
-                        { className: "popular-count" },
-                        element.score,
-                        "%"
-                    ),
-                    _react2.default.createElement(
-                        "span",
-                        null,
-                        element.text
-                    )
-                );
-            });
-
-            var youTubePopular = popular.youtube.map(function (element, i) {
-                return _react2.default.createElement(
-                    "div",
-                    { key: i, className: "element" },
-                    _react2.default.createElement("img", { className: "diamond-rating", src: "/images/" + "d" + element.score + ".png" }),
-                    _react2.default.createElement(
-                        "span",
-                        { className: "popular-text" },
-                        element.text
-                    )
-                );
-            });
-
             return _react2.default.createElement(
                 "div",
                 { style: tagFinderStyle },
@@ -35757,9 +35788,14 @@ var TagFinder = function (_React$Component) {
                             )
                         )
                     ),
-                    _react2.default.createElement(_MetersBox2.default, { isFetchingData: isFetchingData, tagRating: tagRating }),
-                    _react2.default.createElement(_PopularBox2.default, { youTubePopular: youTubePopular, trends: trends }),
-                    _react2.default.createElement(_AutoBox2.default, { yandexAuto: yandexAuto, youtubeAuto: youtubeAuto, googleAuto: googleAuto })
+                    _react2.default.createElement(_MetersBox2.default, { isFetchingData: isFetchingData,
+                        score: tagRating.score,
+                        searchValueQuality: tagRating.searchValueQuality,
+                        videoQuality: tagRating.videoQuality,
+                        text: tagRating.text
+                    }),
+                    _react2.default.createElement(_PopularBox2.default, { youTubePopular: popular.youtube, trends: popular.trends }),
+                    _react2.default.createElement(_AutoBox2.default, { yandex: autoSugest.yandex, youtube: autoSugest.youtube, google: autoSugest.google })
                 )
             );
         }
@@ -35874,6 +35910,7 @@ var YouTagsTool = function (_React$Component) {
 
             var checkListStyle = steps.checkListActive ? visibleStyle : invisibleStyle;
 
+            //combining steps to jsx components from array
             var allSteps = steps.checkList.map(function (step, i) {
                 return _react2.default.createElement(_Step2.default, {
                     key: i,
@@ -36296,7 +36333,6 @@ function stepsReducer() {
 
 
     switch (action.type) {
-
         case types.TO_CHECK_LIST:
             return _extends({}, state, { checkListActive: true });
 
@@ -36312,7 +36348,7 @@ function stepsReducer() {
             {
                 return _dotPropImmutable2.default.set(state, "checkList." + action.payload.stepNum + ".opened", action.payload.opened);
             }
-
+        //switch all steps executed state to false
         case types.RESTART_STEPS:
             {
                 var newState = _extends({}, state);
@@ -36321,7 +36357,6 @@ function stepsReducer() {
                 }
                 return newState;
             }
-
         default:
             return state;
     }
@@ -36492,7 +36527,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var StatsService = function () {
 
     var getPopularAndScore = function getPopularAndScore(text, popularCallBack, scoreCallBack) {
-        _jquery2.default.getJSON('https://www.googleapis.com/youtube/v3/search?key=AIzaSyD8875J05trC_O6hssu5gDTRaM1ImKZEKU&maxResults=10&relevanceLanguage=ru&regionCode=ru&q=' + text + '&part=snippet&type=video', function (data) {
+
+        var apiKey = "AIzaSyD8875J05trC_O6hssu5gDTRaM1ImKZEKU";
+        var youtubeSerchApiUrl = "https://www.googleapis.com/youtube/v3/search?key=" + apiKey;
+        var youtubeVideosApiUrl = "https://www.googleapis.com/youtube/v3/videos?key=" + apiKey;
+
+        //downloading all videos with current tag
+        _jquery2.default.getJSON(youtubeSerchApiUrl + '&maxResults=10&relevanceLanguage=ru&regionCode=ru&q=' + text + '&part=snippet&type=video', function (data) {
 
             var allTags = [];
             var allIds = [];
@@ -36500,10 +36541,11 @@ var StatsService = function () {
                 allIds.push(data.items[i].id.videoId);
             }
 
+            //downloading all tags from all downloaded videos
             for (var _i in allIds) {
                 _jquery2.default.ajax({
                     async: false,
-                    url: 'https://www.googleapis.com/youtube/v3/videos?key=AIzaSyD8875J05trC_O6hssu5gDTRaM1ImKZEKU&fields=items(snippet(title,description,tags))&part=snippet&id=' + allIds[_i],
+                    url: youtubeVideosApiUrl + '&fields=items(snippet(title,description,tags))&part=snippet&id=' + allIds[_i],
                     dataType: "json",
                     success: function success(data) {
                         for (var _i2 in data.items[0].snippet.tags) {
@@ -36512,11 +36554,14 @@ var StatsService = function () {
                     }
                 });
             }
+
+            //constructing new list of tags and their count
             var map = new Map();
             allTags.forEach(function (a) {
                 return map.set(a, (map.get(a) || 0) + 1);
             });
 
+            //disposing unique tags from array
             var uniqueKeys = allTags.filter(function (a) {
                 return map.get(a) === 1;
             });
@@ -36529,6 +36574,7 @@ var StatsService = function () {
                 return notUniqueTags.push({ count: val, value: key });
             });
 
+            //sorting tags
             for (var _i4 = 0; _i4 < notUniqueTags.length - 1; _i4++) {
                 for (var j = 0; j < notUniqueTags.length - 1; j++) {
                     if (notUniqueTags[j].count < notUniqueTags[j + 1].count) {
@@ -36541,19 +36587,26 @@ var StatsService = function () {
                     }
                 }
             }
+
+            //get only top five of them
             var topFiveTags = [];
             for (var _i5 = 0; _i5 < 5; _i5++) {
                 if (notUniqueTags.length <= _i5) break;
                 topFiveTags.push(notUniqueTags[_i5]);
             }
 
+            //forming top tags for inputted tag and their count
             var youPopular = topFiveTags.map(function (tag) {
                 return { score: tag.count, text: tag.value };
             });
+
+            //total count of videos
             var totalResults = data.pageInfo.totalResults;
 
+            //returning popular tags 
             popularCallBack(youPopular);
 
+            //getting tags score and returning it
             _jquery2.default.getJSON('/api/tagscore?keyword=' + text + "&count=" + totalResults, function (data) {
                 scoreCallBack({ score: data.Points, text: data.Explanation, videoQuality: data.VideoCountQuality, searchValueQuality: data.SVQuality });
             });
@@ -36766,6 +36819,7 @@ var _YouTagsTool2 = _interopRequireDefault(_YouTagsTool);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//set overlay agree function
 Window.overlayOk = _overlay.overlayOk;
 
 (0, _reactDom.render)(_react2.default.createElement(

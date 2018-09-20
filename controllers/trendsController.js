@@ -1,5 +1,6 @@
 const googleTrends = require('google-trends-api');
 
+// getting trends using google trends api
 exports.getTrends = function (req, res) {
 
     let keyword = req.query.keyword;

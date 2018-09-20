@@ -6,24 +6,25 @@ export default class MetersBox extends React.Component {
     }
 
     render() {
-        const { isFetchingData, tagRating, } = this.props;
+        const { isFetchingData, score, searchValueQuality, videoQuality, text } = this.props;
 
         let visibleStyle = {display: "block"};
         let invisibleStyle = {display: "none"};
 
         let meterBoxStyle = isFetchingData? invisibleStyle: visibleStyle;
 
+        //choosing score color based on score
         let tagScoreStyle = {color: "#f00"};
-        if (tagRating.score >= 25 && tagRating.score < 40) {
+        if (score >= 25 && score < 40) {
             tagScoreStyle = {color: "#ef7171"};
         }
-        else if (tagRating.score >= 40 && tagRating.score < 60) {
+        else if (score >= 40 && score < 60) {
             tagScoreStyle = {color: "#ffdc28"};
         }
-        else if (tagRating.score >= 60 && tagRating.score < 70) {
+        else if (score >= 60 && score < 70) {
             tagScoreStyle = {color: "#68f1ae"};
         }
-        else if (tagRating.score >= 70 && tagRating.score <= 100) {
+        else if (score >= 70 && score <= 100) {
             tagScoreStyle = {color: "#03a958"};
         }
 
@@ -32,11 +33,11 @@ export default class MetersBox extends React.Component {
                 <div className="row speedometer-section">
                     <div className="col-md-6 meter">
                         <h3>Объем поиска</h3>
-                        <img src={"/images/sm_" + tagRating.searchValueQuality +".png"}/>
+                        <img src={"/images/sm_" + searchValueQuality +".png"}/>
                     </div>
                     <div className="col-md-6 meter">
                         <h3>Конкуренция</h3>
-                        <img src={"/images/sm_" + tagRating.videoQuality +".png"}/>
+                        <img src={"/images/sm_" + videoQuality +".png"}/>
                     </div>
                 </div>
                 <div className="row rating-section">
@@ -44,11 +45,11 @@ export default class MetersBox extends React.Component {
                         <div className="row">
                             <div className="col-md-4">
                                 <h3 className="tag-rating-label">Рейтинг тега</h3>
-                                <div className="meter-count" style={tagScoreStyle}>{tagRating.score}</div>
+                                <div className="meter-count" style={tagScoreStyle}>{score}</div>
                             </div>
 
                             <div className="col-md-8">
-                                <p className="points-exp">{tagRating.text}</p>
+                                <p className="points-exp">{text}</p>
                             </div>
                         </div>
                     </div>

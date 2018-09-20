@@ -38,21 +38,6 @@ export default class TagFinder extends React.Component {
 
         let loadBoxStyle = isFetchingData ? visibleStyle: invisibleStyle;
 
-        let yandexAuto= autoSugest.yandex.map((element, i)=>{return <li key={i}>{element}</li>});
-        let youtubeAuto= autoSugest.youtube.map((element, i)=>{return <li key={i}>{element}</li>});
-        let googleAuto= autoSugest.google.map((element, i)=>{ return <li key={i}>{element}</li>});
-
-        let trends = popular.trends.map((element, i)=>{
-            return <div key={i} className='element'>
-                        <div className='popular-count'>{element.score}%</div>
-                        <span>{element.text}</span>
-                    </div>});
-
-        let youTubePopular = popular.youtube.map((element, i)=>{
-            return <div key={i} className='element'>
-                        <img className='diamond-rating' src={"/images/" + "d" + element.score + ".png"}/>
-                        <span className="popular-text">{element.text}</span>
-                    </div>});
 
         return (
             <div style={tagFinderStyle}>
@@ -78,11 +63,16 @@ export default class TagFinder extends React.Component {
                         </div>
                     </div>
 
-                    <MetersBox isFetchingData={isFetchingData} tagRating={tagRating}/>
+                    <MetersBox isFetchingData={isFetchingData}
+                               score = {tagRating.score}
+                               searchValueQuality = {tagRating.searchValueQuality}
+                               videoQuality = {tagRating.videoQuality}
+                               text = {tagRating.text}
+                    />
 
-                    <PopularBox youTubePopular={youTubePopular} trends={trends}/>
+                    <PopularBox youTubePopular={popular.youtube} trends={popular.trends}/>
 
-                    <AutoBox yandexAuto={yandexAuto} youtubeAuto={youtubeAuto} googleAuto={googleAuto}/>
+                    <AutoBox yandex={autoSugest.yandex} youtube={autoSugest.youtube} google={autoSugest.google}/>
                 </div>
             </div>
 

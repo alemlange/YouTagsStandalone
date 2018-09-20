@@ -6,6 +6,7 @@ import store from "./javascripts/store"
 import {overlayOk} from "./javascripts/overlay.js"
 import YouTagsTool from "./javascripts/components/YouTagsTool"
 
+//set overlay agree function
 Window.overlayOk = overlayOk;
 
 render(

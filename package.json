@@ -4,11 +4,13 @@
   "private": true,
   "scripts": {
     "webpack": "webpack",
-    "start": "node app"
+    "start": "node app",
+    "test": "jest"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
+    "babel-jest": "^23.6.0",
     "babel-loader": "^7.1.4",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
@@ -24,12 +26,14 @@
     "google-trends-api": "^4.7.0",
     "hbs": "~4.0.1",
     "http-errors": "~1.6.2",
+    "jest": "^23.6.0",
     "jquery": "^3.3.1",
     "morgan": "~1.9.0",
     "prop-types": "^15.6.2",
     "react": "^16.5.1",
     "react-dom": "^16.5.1",
     "react-redux": "^5.0.7",
+    "react-test-renderer": "^16.5.2",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
     "request": "^2.88.0",

@@ -45,6 +45,7 @@ class YouTagsTool extends React.Component {
 
         let checkListStyle = steps.checkListActive ? visibleStyle : invisibleStyle;
 
+        //combining steps to jsx components from array
         let allSteps = steps.checkList.map((step, i)=>
             <Step
                 key={i}
