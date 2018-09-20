@@ -73,6 +73,7 @@ export default class TagFinder extends React.Component {
                     <PopularBox youTubePopular={popular.youtube} trends={popular.trends}/>
 
                     <AutoBox yandex={autoSugest.yandex} youtube={autoSugest.youtube} google={autoSugest.google}/>
+
                 </div>
             </div>
 

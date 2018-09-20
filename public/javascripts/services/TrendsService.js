@@ -13,6 +13,8 @@ var TrendsService = function(){
             }
 
             callback(trends);
+        }).fail(()=>{
+            throw new Error("Could not get trends");
         });
     };
     return {

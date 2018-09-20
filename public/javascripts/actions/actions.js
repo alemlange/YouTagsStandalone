@@ -95,30 +95,37 @@ export function RequestTagStatistics(tag) {
 
         //downloading score and youtube popular tags together
         //cause tag's score depends on videocount from popular tags
-        StatsService.getPopularAndScore(tag,
-            (data)=>{
-                dispatch(ChangeYoutubePopular(data));
-            },
-            (data)=>{
-                dispatch(ChangeTagScore(data));
-            }
-        );
+        try{
+            StatsService.getPopularAndScore(tag,
+                (data)=>{
+                    dispatch(ChangeYoutubePopular(data));
+                },
+                (data)=>{
+                    dispatch(ChangeTagScore(data));
+                }
+            );
 
-        //then doing trends and autocomplete stuff
-        TrendsService.getTrends(tag,(data)=>{
-            dispatch(ChangeTrends(data));
-        });
+            //then doing trends and autocomplete stuff
+            TrendsService.getTrends(tag,(data)=>{
+                dispatch(ChangeTrends(data));
+            });
 
-        AutoService.searchYandexAuto(tag, (data)=>{
-            dispatch(ChangeYandexAuto(data));
-        });
+            AutoService.searchYandexAuto(tag, (data)=>{
+                dispatch(ChangeYandexAuto(data));
+            });
 
-        AutoService.searchGoogleAuto(tag,(data)=> {
-            dispatch(ChangeGoogleAuto(data));
-        });
+            AutoService.searchGoogleAuto(tag,(data)=> {
+                dispatch(ChangeGoogleAuto(data));
+            });
 
-        AutoService.searchYoutubeAuto(tag,(data)=> {
-            dispatch(ChangeYoutubeAuto(data));
-        });
+            AutoService.searchYoutubeAuto(tag,(data)=> {
+                dispatch(ChangeYoutubeAuto(data));
+            });
+        }
+        catch(err){
+            dispatch({
+                type: types.TAG_STATISTICS_FAILED
+            });
+        }
     }
 }
