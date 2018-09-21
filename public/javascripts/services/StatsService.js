@@ -72,13 +72,15 @@ var StatsService = function(){
             //total count of videos
             let totalResults = data.pageInfo.totalResults;
 
-            //returning popular tags 
+            //returning popular tags
             popularCallBack(youPopular);
 
             //getting tags score and returning it
             $.getJSON('/api/tagscore?keyword=' + text + "&count=" + totalResults, function (data) {
                 scoreCallBack({score: data.Points, text: data.Explanation, videoQuality: data.VideoCountQuality, searchValueQuality: data.SVQuality});
             });
+        }).fail(()=>{
+            throw new Error("Could not get stats");
         });
     };
     return {

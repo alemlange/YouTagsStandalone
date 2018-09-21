@@ -12,7 +12,17 @@ function tagFinderReducer(state = tagFinderInitState, action){
 
         case types.TAG_STATISTICS_REQUEST:{
             let newState = dotProp.set(state, `isFired`, true);
+            newState = dotProp.set(newState,"popular.youtube", []);
+            newState = dotProp.set(newState,"popular.trends", []);
+            newState = dotProp.set(newState,"autoSugest.google", []);
+            newState = dotProp.set(newState,"autoSugest.yandex", []);
+            newState = dotProp.set(newState,"autoSugest.youtube", []);
             return dotProp.set(newState, `isFetchingData`, true);
+        }
+
+        case types.TAG_STATISTICS_FAILED:{
+            let newState = dotProp.set(state, `isFired`, false);
+            return dotProp.set(newState, `isFetchingData`, false);
         }
 
         case types.CHANGE_TAG_SCORE:{
