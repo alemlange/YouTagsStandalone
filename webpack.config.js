@@ -1,7 +1,7 @@
 module.exports={
-    entry: "./public/start.js",
+    entry: ["babel-polyfill","./src/client/start.js"],
     output:{
-        path: __dirname + "/public",
+        path: __dirname + "/public/javascripts",
         filename: "bundle.js"
     },
     mode: 'development',
@@ -18,6 +18,10 @@ module.exports={
                       }
                     }
                   ]
+            },
+            {
+                test: /\.css$/,
+                use: [ 'style-loader', 'css-loader' ]
             }
         ]
     },

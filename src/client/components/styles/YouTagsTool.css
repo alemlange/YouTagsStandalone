@@ -1,0 +1,33 @@
+@media only screen and (max-width: 900px) {
+  /* For mobile phones: */
+  [class*="yt-explorer"] {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+}
+
+.yt-explorer {
+  background-color: rgb(241, 241, 241);
+  border: 1px solid rgb(204, 204, 204);
+  border-radius: 3px;
+  height: 500px;
+  width: 50%;
+  margin-left: 25%;
+}
+
+.yt-explorer * {
+  box-sizing: border-box;
+}
+
+.yt-steps-container {
+  overflow: auto;
+  height: 440px;
+}
+
+.hidden-content{
+  display: none;
+}
+
+.shown-content{
+  display: block;
+}

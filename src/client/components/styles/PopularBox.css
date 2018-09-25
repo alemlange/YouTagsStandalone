@@ -1,0 +1,41 @@
+.popular-box {
+  display: flex;
+  background-color: white;
+  padding: 13px;
+  margin: 0 0 10px 0 !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,.1);
+}
+
+.popular-container {
+  margin: 0 0 10px 0;
+  padding: 0 0 0;
+  text-align: center;
+}
+
+.popular-element {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.popular-count {
+  font-size: 15px;
+  color: green;
+}
+
+.popular-diamond-rating {
+  width: 150px;
+}
+
+.popular-youtube {
+  margin-top: 5px;
+  font-size: 15px;
+}
+
+.popular-text{
+  display: block;
+}
+
+.popular-google {
+  margin-top: 5px;
+  font-size: 15px;
+}

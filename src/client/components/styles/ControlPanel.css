@@ -1,0 +1,40 @@
+.control-panel {
+  line-height: 2;
+  height: 33px;
+  padding: 0 13px 0 5px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px;
+  border-bottom: none;
+  margin-bottom: 10px;
+  background-color: white;
+}
+
+.control-menu-btn {
+  height: 32px;
+  width: 29px;
+  margin-right: 5px;
+  background: url("/images/yt32.png") no-repeat;
+  background-size: contain;
+}
+
+.control-menu-btn:active {
+  background: url("/images/yt32.png") no-repeat !important;
+  background-size: contain !important;
+}
+
+.control-section-link {
+  margin-right: 10px;
+  font-weight: 500;
+  font-size: 15px;
+  color: rgba(0,0,0,0.5);
+}
+
+.control-section-link:hover {
+  color: rgba(10,10,10,1);
+  text-decoration: none
+}
+
+.control-section-link.active {
+  border-bottom: 3px solid red;
+  color: rgba(10,10,10,1);
+  text-decoration: none
+}

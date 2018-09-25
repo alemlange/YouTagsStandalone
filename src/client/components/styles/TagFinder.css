@@ -1,0 +1,67 @@
+.tf-search-section {
+  padding: 0 10px 0;
+}
+
+.tf-tag-input {
+  display: table-cell;
+  font-family: "YouTube Noto",Roboto,arial,sans-serif;
+  font-size: 13px;
+  width: 98%;
+  margin-right: 10px;
+  height: 29px;
+}
+
+.tf-find {
+  height: 29px;
+  width: 61px;
+  display: table-cell !important;
+  background: url("/images/search-sm.png") no-repeat 22px 6px !important;
+}
+
+.tf-search-control {
+  display: table;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 9px 12px 7px;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px;
+}
+
+.tf-search-img-section {
+  height: 370px;
+  padding: 130px 75px 130px 75px;
+  margin: 0 10px 0;
+  text-align: center;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 1px 2px;
+}
+
+.tf-search-img-big {
+  margin-bottom: 20px;
+}
+
+.tf-results {
+  overflow: auto;
+  height: 370px;
+  background-color: #f1f1f1;
+  padding: 10px;
+}
+
+.tf-box {
+  display: flex;
+  background-color: white;
+  padding: 13px;
+  margin: 0 0 10px 0 !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,.1);
+}
+
+.tf-meter {
+  text-align: center;
+}
+
+.tf-load-img {
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
+

@@ -1,0 +1,52 @@
+.meters-box {
+  display: flex;
+  background-color: white;
+  padding: 13px;
+  margin: 0 0 10px 0 !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,.1);
+}
+
+.meters-speedometer-section {
+  margin: 0 0 0 6px;
+}
+
+.meters-rating-section {
+  margin: 0 0 0 6px;
+}
+
+.meters-meter {
+  text-align: center;
+}
+
+.meters-meter-count {
+  font-size: 22px;
+  text-align:center;
+}
+
+.meters-meter-worst{
+  color: #f00;
+}
+
+.meters-meter-bad{
+  color: #ef7171;
+}
+
+.meters-meter-middle{
+  color: #ffdc28;
+}
+
+.meters-meter-good{
+  color: #68f1ae;
+}
+
+.meters-meter-perfect{
+  color: #03a958;
+}
+
+.meters-tag-rating-label{
+  text-align: center;
+}
+
+.meters-points-exp {
+  font-size: 13px;
+}
